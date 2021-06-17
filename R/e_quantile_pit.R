@@ -1,0 +1,158 @@
+#' E-values for calibration of quantile PIT
+#'
+#' Tests if quantile forecasts are probabilistically calibrated.
+#'
+#' @param zu,zl quantile PIT (can be computed with \code{\link{quantile_pit}}).
+#' @param h forecast lag (positive integer). For example, daily forecasts for
+#'     the next day have lag 1, daily forecasts for an event two days ahead have
+#'     lag 2.
+#' @param strategy strategy for evaluating calibration. Available are
+#'     \code{"grenander"} for the Grenander estimator, and \code{"bernstein"}
+#'     for e-values based on Bernstein polynomials.
+#' @param options options for the given strategy (see \code{\link{beta_e}} and
+#'     \code{\link{kernel_e}} for the available parameters).
+#'
+#' @details
+#' For continuously distributed observations (when \code{zu,zl} may only
+#' attain finitely many different values), it is recommended to use
+#' \code{strategy="grenander"}.
+#'
+#' @return
+#' If \code{h} equals 1: Returns a list containing the vector of e-values
+#' (\code{e}), separate e-values for the upper and lower quantile PIT
+#' (\code{zu}, \code{zl}), and the forecast lag \code{h}.
+#'
+#' If \code{h} is greater than 1: the list contains for each \code{j=1,2,...,h}
+#' a list with the e-values for all observations with indices
+#' \code{j,j+h,j+2h,...}.
+#'
+#' @seealso
+#' \code{\link{quantile_pit}} for computing the quantile PIT from forecasts.
+#'
+#' \code{\link{grenander_e}}, \code{\link{bernstein_e}} for related tests of
+#' stochastic dominance.
+#'
+#' @export
+e_quantile_pit <- function(
+    zu,
+    zl,
+    h,
+    strategy = "grenander",
+    options = list()
+  ) {
+  e_func <- get(paste0(strategy, "_e"))
+  n <- length(zu)
+  zu <- 1 - zu
+  if (h == 1) {
+    zu <- 1 - zu
+    evalues_u <- do.call(e_func, c(list(z = zu), options))
+    eu <- evalues_u$e
+    evalues_l <- do.call(e_func, c(list(z = zl), options))
+    el <- evalues_l$e
+    e <- 0.5 * (eu + el)
+    list(e = e, eu = eu, el = el, h = 1)
+  } else {
+    evalues <- vector("list", h)
+    f <- seq_along(zu) %% h
+    zu_split <- unname(split(x = zu, f))
+    zl_split <- unname(split(x = zl, f))
+    for (j in seq_len(h)) {
+      evalues_u <- do.call(e_func, c(list(z = zu_split[[j]]), options))
+      eu <- evalues_u$e
+      evalues_l <- do.call(e_func, c(list(z = zl_split[[j]]), options))
+      el <- evalues_l$e
+      e <- 0.5 * (eu + el)
+      evalues[[j]] <- list(e = e, eu = eu, el = el)
+    }
+    list(evalues_h = evalues, h = h)
+  }
+}
+
+#' Test stochastic dominance with Grenander estimator.
+#'
+#' Tests the null hypothesis that \code{z} are generated from a distribution
+#' stochastically greater than the uniform distribution.
+#'
+#' @param z numbers in (0, 1] (exact zeros are not allowed).
+#' @param n0 minimum number of observations for starting. All e-values until
+#'     \code{n0} (included) are equal to 1, and the e-value is computed
+#'     starting from the \code{n0+1}th observation.
+#' @param ... currently not used, only for calling the function with
+#'     \code{do.call}.
+#'
+#' @details
+#' For the reverse hypothesis (smaller than uniform distribution), replace
+#' \code{z} by \code{1-z}. Apply \code{\link{correct_e}} to prevent e-values
+#' of exactly zero.
+#'
+#' @return
+#' A list containing the e-values (\code{e}).
+#'
+#' @export
+grenander_e <- function(z, n0 = 10, ...) {
+  df <- stats::aggregate(
+    data.frame(ind = seq_along(z)),
+    by = list(z = z),
+    FUN = list
+  )
+  pos_Z <- integer(length(z))
+  pos_Z[unlist(df$ind)] <- rep(seq_len(nrow(df)), times = lengths(df$ind))
+
+  e <- sequential_grenander(z = c(0, df$z), pos_Z = pos_Z)
+  e[seq_len(n0)] <- 1
+  list(e = e)
+}
+
+#' Test stochastic dominance with Bernstein polynomials
+#'
+#' Tests the null hypothesis that \code{z} are generated from a distribution
+#' stochastically greater than the uniform distribution.
+#'
+#' @param z numbers in [0, 1].
+#' @param n0 minimum number of observations for starting. All e-values until
+#'     \code{n0} (included) are equal to 1, and the e-value is computed
+#'     starting from the \code{n0+1}th observation.
+#' @param m maximum degree of the Bernstein polynomials in the mixture. If
+#'     \code{NULL}, an optimal \code{m} is estimated with the AIC, BIC or CN
+#'     criterion specified.
+#' @param crit the type of criterion to use for selecting the number of weights.
+#'     Defaults to \code{"CN"}.
+#' @param settings options for \code{\link[osqp]{osqp}}.
+#' @param ... currently not used, only for calling the function with
+#'     \code{do.call}.
+#'
+#' @details
+#' For the reverse hypothesis (smaller than uniform distribution), replace
+#' \code{z} by \code{1-z}. Apply \code{\link{correct_e}} to prevent e-values
+#' of exactly zero.
+#'
+#' @return
+#' A list containing the e-values (\code{e}).
+#'
+#' @seealso
+#' \code{\link{quantile_pit}}
+#'
+#' @export
+bernstein_e <- function(
+  z,
+  n0 = 10,
+  m = 20,
+  crit = "CN",
+  settings =
+    list(eps_abs = 1e-5, eps_rel = 1e-5, max_iter = 4000L, verbose = FALSE),
+  ...
+) {
+  n <- length(z)
+  e <- rep(1, n)
+  for (i in max(3, n0):n){
+    e[i] <- umd(
+      data = z[seq_len(i - 1)],
+      monotone = "Decr",
+      m = m,
+      settings = settings
+    )$dumd(z[i])
+  }
+
+  list(e = e)
+}
+

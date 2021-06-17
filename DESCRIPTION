@@ -16,4 +16,5 @@ LinkingTo:
 Imports: 
     Rcpp,
     bde,
-    KernSmooth
+    KernSmooth,
+    osqp

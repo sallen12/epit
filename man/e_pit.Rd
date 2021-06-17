@@ -4,7 +4,7 @@
 \alias{e_pit}
 \title{E-values for probabilistic calibration}
 \usage{
-e_pit(z, h, strategy, options = list())
+e_pit(z, h, strategy = "beta", options = list())
 }
 \arguments{
 \item{z}{probability integral transform (numbers in [0,1]).}
@@ -18,13 +18,14 @@ lag 2.}
 maximum likelihood) or \code{"kernel"} for an e-value constructed with
 kernel density estimation.}
 
-\item{options}{options for the given method (see \code{\link{beta_e}} and
+\item{options}{options for the given strategy (see \code{\link{beta_e}} and
 \code{\link{kernel_e}} for the available parameters).}
 }
 \value{
 If \code{h} equals 1: Returns a list containing the vector of e-values
 (\code{e}), parameters used for the computation of the e-value (depending
-on \code{strategy}), and the forecast lag \code{h}.
+on \code{strategy}), indices where \code{z} equals exactly zero or one
+\code{zero_one}, and the forecast lag \code{h}.
 
 If \code{h} is greater than 1: Instead of a vector of e-values, the list
 contains for each \code{j=1,2,...,h} a list with the e-values for all
@@ -34,6 +35,9 @@ parameters.
 \description{
 Tests if the probability integral transform (PIT) of forecasts is uniformly
 distributed.
+}
+\details{
+Values of \code{z} exactly equal to zero or one are ignored.
 }
 \seealso{
 \code{\link{beta_e}}, \code{\link{kernel_e}} for directly computing

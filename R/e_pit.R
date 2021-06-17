@@ -11,13 +11,17 @@
 #'     \code{"beta"} for betting against a beta distribution (estimated by
 #'     maximum likelihood) or \code{"kernel"} for an e-value constructed with
 #'     kernel density estimation.
-#' @param options options for the given method (see \code{\link{beta_e}} and
+#' @param options options for the given strategy (see \code{\link{beta_e}} and
 #'     \code{\link{kernel_e}} for the available parameters).
+#'
+#' @details
+#' Values of \code{z} exactly equal to zero or one are ignored.
 #'
 #' @return
 #' If \code{h} equals 1: Returns a list containing the vector of e-values
 #' (\code{e}), parameters used for the computation of the e-value (depending
-#' on \code{strategy}), and the forecast lag \code{h}.
+#' on \code{strategy}), indices where \code{z} equals exactly zero or one
+#' \code{zero_one}, and the forecast lag \code{h}.
 #'
 #' If \code{h} is greater than 1: Instead of a vector of e-values, the list
 #' contains for each \code{j=1,2,...,h} a list with the e-values for all
@@ -29,7 +33,7 @@
 #' e-values for lag 1 forecasts with the corresponding method.
 #'
 #' @export
-e_pit <- function(z, h, strategy, options = list()) {
+e_pit <- function(z, h, strategy = "beta", options = list()) {
   e_func <- get(paste0(strategy, "_e"))
   n <- length(z)
   if (h == 1) {
@@ -44,13 +48,14 @@ e_pit <- function(z, h, strategy, options = list()) {
     f <- seq_along(z) %% h
     z_split <- unname(split(x = z, f))
     for (j in seq_len(h)) {
-      evalues[[j]] <- e_pit(
+      tmp <- e_pit(
         z = z_split[[j]],
         h = 1,
         strategy = strategy,
         options = options
       )
-      evalues[[j]] <- evalues[[j]][length(evalues[[j]])] <- NULL
+      tmp[[length(tmp)]] <- NULL
+      evalues[[j]] <- tmp
     }
     list(evalues_h = evalues, h = h)
   }
