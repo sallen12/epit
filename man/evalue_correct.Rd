@@ -14,5 +14,5 @@ Vector of corrected e-values.
 }
 \description{
 Transforms an e-value \code{e} so that it is never zero, by replacing
-\code{e[i]} with \code{1/i + (1-1/i)*e[i]}.
+\code{e[i]} with \code{1/i+(1-1/i)*e[i]}.
 }

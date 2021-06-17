@@ -4,7 +4,7 @@
 \alias{e_pit}
 \title{E-values for probabilistic calibration}
 \usage{
-e_pit(z, h, strategy = "beta", options = list())
+e_pit(z, h, strategy = "beta", options = list(), check = FALSE)
 }
 \arguments{
 \item{z}{probability integral transform (numbers in [0,1]).}
@@ -20,12 +20,14 @@ kernel density estimation.}
 
 \item{options}{options for the given strategy (see \code{\link{beta_e}} and
 \code{\link{kernel_e}} for the available parameters).}
+
+\item{check}{check for correct format of input parameters.}
 }
 \value{
 If \code{h} equals 1: Returns a list containing the vector of e-values
 (\code{e}), parameters used for the computation of the e-value (depending
 on \code{strategy}), indices where \code{z} equals exactly zero or one
-\code{zero_one}, and the forecast lag \code{h}.
+(\code{zero_one}), and the forecast lag \code{h}.
 
 If \code{h} is greater than 1: Instead of a vector of e-values, the list
 contains for each \code{j=1,2,...,h} a list with the e-values for all
@@ -38,6 +40,29 @@ distributed.
 }
 \details{
 Values of \code{z} exactly equal to zero or one are ignored.
+}
+\examples{
+n <- 500
+z <- simulate_pit(n = n, type = "pit", bias = 0.25, dispersion = 0.25)$z
+
+# If z is a lag 1 forecast:
+e1 <- e_pit(z, h = 1, strategy = "beta")
+e2 <- e_pit(z, h = 1, strategy = "kernel")
+evalue_merge(e1)
+evalue_merge(e2)
+
+## Obtain merged e-values manually:
+max(cumprod(e1$e))
+prod(e1$e)
+max(cumprod(e2$e))
+prod(e2$e)
+
+# If z is a lag 2 forecast:
+e1 <- e_pit(z, h = 2, strategy = "beta")
+str(e1)
+e2 <- e_pit(z, h = 2, strategy = "kernel")
+evalue_merge(e1)
+evalue_merge(e2)
 }
 \seealso{
 \code{\link{beta_e}}, \code{\link{kernel_e}} for directly computing

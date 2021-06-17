@@ -13,6 +13,7 @@
 #'     kernel density estimation.
 #' @param options options for the given strategy (see \code{\link{beta_e}} and
 #'     \code{\link{kernel_e}} for the available parameters).
+#' @param check check for correct format of input parameters.
 #'
 #' @details
 #' Values of \code{z} exactly equal to zero or one are ignored.
@@ -21,7 +22,7 @@
 #' If \code{h} equals 1: Returns a list containing the vector of e-values
 #' (\code{e}), parameters used for the computation of the e-value (depending
 #' on \code{strategy}), indices where \code{z} equals exactly zero or one
-#' \code{zero_one}, and the forecast lag \code{h}.
+#' (\code{zero_one}), and the forecast lag \code{h}.
 #'
 #' If \code{h} is greater than 1: Instead of a vector of e-values, the list
 #' contains for each \code{j=1,2,...,h} a list with the e-values for all
@@ -33,7 +34,35 @@
 #' e-values for lag 1 forecasts with the corresponding method.
 #'
 #' @export
-e_pit <- function(z, h, strategy = "beta", options = list()) {
+#'
+#' @examples
+#' n <- 500
+#' z <- simulate_pit(n = n, type = "pit", bias = 0.25, dispersion = 0.25)$z
+#'
+#' # If z is a lag 1 forecast:
+#' e1 <- e_pit(z, h = 1, strategy = "beta")
+#' e2 <- e_pit(z, h = 1, strategy = "kernel")
+#' evalue_merge(e1)
+#' evalue_merge(e2)
+#'
+#' ## Obtain merged e-values manually:
+#' max(cumprod(e1$e))
+#' prod(e1$e)
+#' max(cumprod(e2$e))
+#' prod(e2$e)
+#'
+#' # If z is a lag 2 forecast:
+#' e1 <- e_pit(z, h = 2, strategy = "beta")
+#' str(e1)
+#' e2 <- e_pit(z, h = 2, strategy = "kernel")
+#' evalue_merge(e1)
+#' evalue_merge(e2)
+e_pit <- function(z, h, strategy = "beta", options = list(), check = FALSE) {
+  if (check) {
+    check_z(z)
+    check_h(h)
+    check_strategy(strategy, "pit")
+  }
   e_func <- get(paste0(strategy, "_e"))
   n <- length(z)
   if (h == 1) {
@@ -67,7 +96,7 @@ e_pit <- function(z, h, strategy = "beta", options = list()) {
 #' the alternative that it follows a beta distribution with parameters not
 #' equal to 1.
 #'
-#' @param z vector of numbers in [0,1].
+#' @param z vector of numbers in (0,1).
 #' @param n0 minimum number of observations for starting. All e-values until
 #'     \code{n0} (included) are equal to 1, and the density is estimated
 #'     starting from the \code{n0+1}th observation.
@@ -83,6 +112,19 @@ e_pit <- function(z, h, strategy = "beta", options = list()) {
 #' estimated parameters at all time points (\code{pars}).
 #'
 #' @export
+#'
+#' @examples
+#' n <- 100
+#' z <- simulate_pit(n = n, type = "pit", bias = 0, dispersion = 0.25)$z
+#' e <- beta_e(z = z, n0 = 5)
+#' str(e)
+#'
+#' # Merge by product
+#' prod(e$e)
+#' max(cumprod(e$e))
+#'
+#' # Look at parameters
+#' tail(e$par)
 beta_e <- function(
   z,
   n0 = 10,
@@ -109,14 +151,14 @@ beta_e <- function(
 #'     (see \code{\link[KernSmooth]{dpik}}).
 #' @param gridsize see \code{\link[KernSmooth]{dpik}}.
 #' @param ... currently not used, only for calling the function with
-#'     \code{do.call}.#'
+#'     \code{do.call}.
+#'
 #' @details
-#' The density is estimated with
-#' \code{\link[bde]{jonesCorrectionMuller94BoundaryKernel}} and bandwidth
-#' selection uses \code{\link[KernSmooth]{dpik}}. In some cases, this
-#' estimator is not a density (it does not integrate to one), and it is
-#' therefore approximated on the grid 0,0.01,...,0.99,1 and appropriately
-#' rescaled.
+#' The density is estimated with \code{jonesCorrectionMuller94BoundaryKernel}
+#' from the package \pkg{bde} (see \code{\link[bde]{bde}}). Bandwidth selection
+#' uses \code{\link[KernSmooth]{dpik}}. In some cases, this estimator is not a
+#' density (it does not integrate to one), and it is therefore approximated on
+#' the grid 0,0.01,...,0.99,1 and appropriately rescaled.
 #'
 #' @return
 #' A list containing the vector of e-values (\code{e}) and a vector of the
@@ -127,6 +169,16 @@ beta_e <- function(
 #' @importFrom bde distribution
 #'
 #' @export
+#'
+#' @examples
+#' n <- 100
+#' z <- simulate_pit(n = n, type = "pit", bias = 0, dispersion = 0.5)$z
+#' e <- kernel_e(z = z, n0 = 10)
+#' str(e)
+#'
+#' # Merge by product
+#' prod(e$e)
+#' max(cumprod(e$e))
 kernel_e <- function(
   z,
   n0 = 10,

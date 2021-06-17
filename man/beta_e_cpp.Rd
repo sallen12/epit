@@ -13,8 +13,8 @@ beta_e_cpp(z, tol, max_it, n0)
 
 \item{max_it}{maximum number of iterations in Newton method.}
 
-\item{n0}{starting sample sizes. The first \code{n0} observations are
-used only for estimation and the e-values are not computed.}
+\item{n0}{starting sample size. The first \code{n0} observations are used
+only for estimation and the e-values are not computed.}
 }
 \value{
 List containing the e-values (density evaluated at the given value of

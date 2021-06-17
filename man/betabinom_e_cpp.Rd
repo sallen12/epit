@@ -7,7 +7,7 @@
 betabinom_e_cpp(r, N, tol, max_it, n0)
 }
 \arguments{
-\item{r}{numbers in 1,...,m.}
+\item{r}{numbers in \code{1,...,m}.}
 
 \item{N}{number of trials (equal to \code{m} above).}
 
@@ -15,8 +15,8 @@ betabinom_e_cpp(r, N, tol, max_it, n0)
 
 \item{max_it}{maximum number of iterations in Newton method.}
 
-\item{n0}{starting sample sizes. The first \code{n0} observations are
-used only for estimation and the e-values are not computed.}
+\item{n0}{starting sample size. The first \code{n0} observations are used
+only for estimation and the e-values are not computed.}
 }
 \value{
 List containing the e-values (density evaluated at the given value of

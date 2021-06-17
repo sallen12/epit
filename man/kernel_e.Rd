@@ -22,7 +22,7 @@ starting from the \code{n0+1}th observation.}
 \item{gridsize}{see \code{\link[KernSmooth]{dpik}}.}
 
 \item{...}{currently not used, only for calling the function with
-\code{do.call}.#'}
+\code{do.call}.}
 }
 \value{
 A list containing the vector of e-values (\code{e}) and a vector of the
@@ -34,10 +34,19 @@ any other non-uniform distribution, estimated with a kernel density
 estimator.
 }
 \details{
-The density is estimated with
-\code{\link[bde]{jonesCorrectionMuller94BoundaryKernel}} and bandwidth
-selection uses \code{\link[KernSmooth]{dpik}}. In some cases, this
-estimator is not a density (it does not integrate to one), and it is
-therefore approximated on the grid 0,0.01,...,0.99,1 and appropriately
-rescaled.
+The density is estimated with \code{jonesCorrectionMuller94BoundaryKernel}
+from the package \pkg{bde} (see \code{\link[bde]{bde}}). Bandwidth selection
+uses \code{\link[KernSmooth]{dpik}}. In some cases, this estimator is not a
+density (it does not integrate to one), and it is therefore approximated on
+the grid 0,0.01,...,0.99,1 and appropriately rescaled.
+}
+\examples{
+n <- 100
+z <- simulate_pit(n = n, type = "pit", bias = 0, dispersion = 0.5)$z
+e <- kernel_e(z = z, n0 = 10)
+str(e)
+
+# Merge by product
+prod(e$e)
+max(cumprod(e$e))
 }

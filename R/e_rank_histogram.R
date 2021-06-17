@@ -2,14 +2,19 @@
 #'
 #' Tests null hypothesis that rank histogram follows a uniform distribution.
 #'
-#' @param r observed ranks (numbers in 1,...,m+1).
+#' @param r observed ranks (numbers in \code{1,...,m+1}).
 #' @param h forecast lag.
-#' @param m size of the ensemble (positive integer).
+#' @param m size of the ensemble (positive integer, the \code{m} above).
 #' @param strategy strategy for evaluating calibration. Available are
 #'     \code{"empirical"} for the empirical distribution, and \code{"betabinom"}
 #'     for the beta-binomial distribution (estimated with maximum likelihood).
 #' @param options options for the given strategy (see \code{\link{betabinom_e}}
 #'     and \code{\link{empirical_e}} for the available parameters).
+#' @param check check for correct format of input parameters.
+#'
+#' @details
+#' It is recommended to use \code{strategy="empirical"} only for large sample
+#' sizes (>1000).
 #'
 #' @return
 #' If \code{h} equals 1: Returns a list containing the vector of e-values
@@ -24,7 +29,34 @@
 #' observations.
 #'
 #' @export
-e_rank_histogram <- function(r, h, m, strategy, options = list()) {
+#'
+#' @examples
+#' n <- 360
+#' r <- simulate_pit(n, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)$r
+#'
+#' # If z is a lag 1 forecast:
+#' e <- e_rank_histogram(r, h = 1, m = 20, strategy = "betabinom")
+#' evalue_merge(e)
+#' prod(e$e)
+#' max(cumprod(e$e))
+#'
+#' # Lag 2:
+#' e <- e_rank_histogram(r, h = 2, m = 20, strategy = "betabinom")
+#' str(e)
+#' evalue_merge(e)
+e_rank_histogram <- function(
+    r,
+    h,
+    m,
+    strategy = "betabinom",
+    options = list(),
+    check = FALSE
+  ) {
+  if (check) {
+    check_ranks(r, m)
+    check_h(h)
+    check_strategy(strategy, "rank_histogram")
+  }
   e_func <- get(paste0(strategy, "_e"))
   n <- length(r)
   if (h == 1) {
@@ -54,8 +86,7 @@ e_rank_histogram <- function(r, h, m, strategy, options = list()) {
 #' distribution.
 #'
 #' @param r observations.
-#' @param m size of discrete uniform distribution PLUS ONE (positive integer,
-#'     greater or equal to \code{max(r)+1}).
+#' @param m size of discrete uniform distribution.
 #' @param n0 minimum number of observations for starting. All e-values until
 #'     \code{n0} (included) are equal to 1.
 #' @param ... currently not used, only for calling the function with
@@ -65,6 +96,11 @@ e_rank_histogram <- function(r, h, m, strategy, options = list()) {
 #' List containing the e-values.
 #'
 #' @export
+#'
+#' @examples
+#' r <- simulate_pit(1000, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
+#' e <- empirical_e(r = r$r, m = 20)
+#' max(cumprod(e$e))
 empirical_e <- function(r, m, n0 = 20, ...) {
   sequential_ranks(r = r, m = m + 1, n0 = n0)
 }
@@ -81,8 +117,8 @@ empirical_e <- function(r, m, n0 = 20, ...) {
 #' @param n0 minimum number of observations for starting. All e-values until
 #'     \code{n0} (included) are equal to 1.
 #' @param tol tolerance for likelihood maximization. The maximization algorithm
-#'     is stopped as soon as the difference between the log-likelihood of two
-#'     subsequent iterations is at most \code{tol}.
+#'     is stopped as soon as the difference between subsequent parameter
+#'     estimates is smaller than \code{tol}.
 #' @param max_it maximum number of iterations for likelihood maximization.
 #' @param ... currently not used, only for calling the function with
 #'     \code{do.call}.
@@ -96,6 +132,11 @@ empirical_e <- function(r, m, n0 = 20, ...) {
 #' (matrix, \code{pars}).
 #'
 #' @export
+#'
+#' @examples
+#' r <- simulate_pit(360, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
+#' e <- betabinom_e(r = r$r, m = 20)
+#' max(cumprod(e$e))
 betabinom_e <- function(r, m, n0 = 20, tol = 1e-7, max_it = 20, ...) {
   betabinom_e_cpp(r = r, N = m, tol = tol, max_it = max_it, n0 = n0)
 }

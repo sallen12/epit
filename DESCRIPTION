@@ -1,6 +1,6 @@
 Package: epit
 Type: Package
-Title: Tests for Probability Integral Transform And Related
+Title: Tests For Probability Integral Transform And Related
 Version: 0.1.0
 Author: Alexander Henzi, Sebastian Arnold
 Maintainer: Alexander Henzi <henzi.alexander@gmail.com>

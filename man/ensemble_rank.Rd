@@ -4,12 +4,14 @@
 \alias{ensemble_rank}
 \title{Ranks for rank histogram}
 \usage{
-ensemble_rank(y, ensemble)
+ensemble_rank(y, ensemble, check = FALSE)
 }
 \arguments{
 \item{y}{observations (vector).}
 
 \item{ensemble}{ensemble forecasts (matrix with \code{length(y)} rows).}
+
+\item{check}{check for correct format of input parameters.}
 }
 \value{
 Vector of ranks.

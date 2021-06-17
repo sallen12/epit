@@ -25,7 +25,7 @@ starting from the \code{n0+1}th observation.}
 criterion specified.}
 
 \item{crit}{the type of criterion to use for selecting the number of weights.
-Defaults to \code{"CN"}.}
+Defaults to \code{"CN"}, other options are \code{"AIC"} and \code{"BIC"}.}
 
 \item{settings}{options for \code{\link[osqp]{osqp}}.}
 
@@ -41,9 +41,19 @@ stochastically greater than the uniform distribution.
 }
 \details{
 For the reverse hypothesis (smaller than uniform distribution), replace
-\code{z} by \code{1-z}. Apply \code{\link{correct_e}} to prevent e-values
+\code{z} by \code{1-z}. Apply \code{\link{evalue_correct}} to prevent e-values
 of exactly zero.
 }
-\seealso{
-\code{\link{quantile_pit}}
+\examples{
+# Test hypothesis "greater than uniform distribution in stochastic dominance"
+
+## Hypothesis is violated
+z <- rbeta(300, 0.75, 1)
+e <- bernstein_e(z = z)
+max(cumprod(e$e))
+
+## Hypothesis is correct
+z <- rbeta(300, 1, 0.75)
+e <- bernstein_e(z = z)
+max(cumprod(e$e))
 }

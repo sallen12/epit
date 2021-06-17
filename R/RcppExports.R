@@ -38,8 +38,8 @@ NULL
 #' @param z numbers in (0,1), should not be equal to 0 or 1.
 #' @param tol tolerance for stopping (small positive number).
 #' @param max_it maximum number of iterations in Newton method.
-#' @param n0 starting sample sizes. The first \code{n0} observations are
-#'    used only for estimation and the e-values are not computed.
+#' @param n0 starting sample size. The first \code{n0} observations are used
+#'     only for estimation and the e-values are not computed.
 #'
 #' @details
 #' This function is intended for internal use only.
@@ -133,12 +133,12 @@ NULL
 #'
 #' Sequentially estimate a betabinomial distribution and compute e-values.
 #'
-#' @param r numbers in 1,...,m.
+#' @param r numbers in \code{1,...,m}.
 #' @param N number of trials (equal to \code{m} above).
 #' @param tol tolerance for stopping (small positive number).
 #' @param max_it maximum number of iterations in Newton method.
-#' @param n0 starting sample sizes. The first \code{n0} observations are
-#'    used only for estimation and the e-values are not computed.
+#' @param n0 starting sample size. The first \code{n0} observations are used
+#'     only for estimation and the e-values are not computed.
 #'
 #' @details
 #' This function is intended for internal use only.
@@ -172,7 +172,8 @@ sequential_grenander <- function(z, pos_Z) {
     .Call(`_epit_sequential_grenander`, z, pos_Z)
 }
 
-#' Sequential computation of e-values for uniform distribution (empirical)
+#' Sequential computation of e-values for discrete uniform distribution
+#' (empirical)
 #'
 #' For a sample \code{r} in \code{1,...,m}, compute e-values for testing the
 #' null hypothesis that \code{r} follows the uniform distribution on

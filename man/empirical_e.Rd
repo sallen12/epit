@@ -9,8 +9,7 @@ empirical_e(r, m, n0 = 20, ...)
 \arguments{
 \item{r}{observations.}
 
-\item{m}{size of discrete uniform distribution PLUS ONE (positive integer,
-greater or equal to \code{max(r)+1}).}
+\item{m}{size of discrete uniform distribution.}
 
 \item{n0}{minimum number of observations for starting. All e-values until
 \code{n0} (included) are equal to 1.}
@@ -25,4 +24,9 @@ List containing the e-values.
 Tests the null hypothesis that \code{r} are generated from a discrete
 uniform distribution, against the alternative defined by their empirical
 distribution.
+}
+\examples{
+r <- simulate_pit(1000, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
+e <- empirical_e(r = r$r, m = 20)
+max(cumprod(e$e))
 }

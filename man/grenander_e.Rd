@@ -25,6 +25,19 @@ stochastically greater than the uniform distribution.
 }
 \details{
 For the reverse hypothesis (smaller than uniform distribution), replace
-\code{z} by \code{1-z}. Apply \code{\link{correct_e}} to prevent e-values
+\code{z} by \code{1-z}. Apply \code{\link{evalue_correct}} to prevent e-values
 of exactly zero.
+}
+\examples{
+# Test hypothesis "greater than uniform distribution in stochastic dominance"
+
+## Hypothesis is violated
+z <- rbeta(300, 0.75, 1)
+e <- grenander_e(z = z)
+max(cumprod(e$e))
+
+## Hypothesis is correct
+z <- rbeta(300, 1, 0.75)
+e <- grenander_e(z = z)
+max(cumprod(e$e))
 }

@@ -81,7 +81,7 @@ constraintMat <- function( m, maxplace){
 #' Arnold and Alexander Henzi.
 #'
 #' @return
-#'
+#' Vector of weights.
 #'
 #' @importFrom osqp solve_osqp
 #'
@@ -110,7 +110,7 @@ solveWeights <- function(m, Fn, lower, upper, Dmat, dvec,monotone, settings){
 
 #' Monotone density estimation with Bernstein polynomials
 #'
-#' Estimates a smooth monotone mixture of Beta densities.
+#' Estimates a smooth monotone mixture of beta densities.
 #'
 #' @param data observations (in [0,1]).
 #' @param monotone chose \code{"Iso"} for monotone increasing or \code{"Decr"}
@@ -119,7 +119,7 @@ solveWeights <- function(m, Fn, lower, upper, Dmat, dvec,monotone, settings){
 #'     \code{NULL}, an optimal \code{m} is estimated with the AIC, BIC or CN
 #'     criterion specified.
 #' @param crit the type of criterion to use for selecting the number of weights.
-#'     Defaults to \code{"CN"}.
+#'     Defaults to \code{"CN"}, other choices are \code{"AIC"} and \code{"BIC"}.
 #' @param settings options for \code{\link[osqp]{osqp}}.
 #'
 #' @author

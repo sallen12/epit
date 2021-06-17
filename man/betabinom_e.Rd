@@ -16,8 +16,8 @@ greater or equal to \code{max(r)+1}).}
 \code{n0} (included) are equal to 1.}
 
 \item{tol}{tolerance for likelihood maximization. The maximization algorithm
-is stopped as soon as the difference between the log-likelihood of two
-subsequent iterations is at most \code{tol}.}
+is stopped as soon as the difference between subsequent parameter
+estimates is smaller than \code{tol}.}
 
 \item{max_it}{maximum number of iterations for likelihood maximization.}
 
@@ -36,4 +36,9 @@ maximum likelihood.)
 \details{
 If \code{n0} is too small, the estimated parameters may diverge for small
 samples.
+}
+\examples{
+r <- simulate_pit(360, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
+e <- betabinom_e(r = r$r, m = 20)
+max(cumprod(e$e))
 }

@@ -3,22 +3,42 @@
 \docType{package}
 \name{epit-package}
 \alias{epit-package}
-\title{Tests for Probability Integral Transform And Related}
+\title{Tests For Probability Integral Transform And Related}
 \description{
-Blabla
+This package contains functions for testing whether the probability
+integral transform (PIT), the quantile PIT, or rank histograms significantly
+deviate from a uniform distribution. Also allows sequential tests for
+stochastic dominance compared to the uniform distribution.
 }
 \section{How does it work?}{
 
-Blublublu
+For details, see the preprint in the references below.
 }
 
-\section{The \pkg{epit} package}{
+\section{Main functions in the \pkg{epit} package}{
 
 
-To use the package bliblablu
 \itemize{
-\item blo
-\item ble
+\item \code{\link{e_pit}} for testing uniformity of pit, with methods
+    \code{\link{beta_e}} and \code{\link{kernel_e}}.
+\item \code{\link{e_quantile_pit}} for testing calibration of quantile
+    forecasts, with methods \code{\link{grenander_e}} and
+    \code{\link{bernstein_e}} (these methods can also be applied for
+    stochastic dominance testing).
+\item \code{\link{e_rank_histogram}} for testing uniformity of rank
+    histograms, with methods \code{\link{betabinom_e}} and
+    \code{\link{empirical_e}}.
+}
+
+Further useful functions:
+\itemize{
+\item \code{\link{quantile_pit}} for computing the quantile PIT from quantile
+    forecasts and observations, \code{\link{ensemble_rank}} for computing
+    the rank histograms from ensemble forecasts and observations.
+\item \code{\link{evalue_merge}} for merging the output of the above
+    functions into a single e-value for hypothesis testing.
+\item \code{\link{evalue_combine_h}} for combining e-values at different
+    forecast lags.
 }
 }
 

@@ -7,7 +7,7 @@
 beta_e(z, n0 = 10, tol = 1e-06, max_it = 20, ...)
 }
 \arguments{
-\item{z}{vector of numbers in [0,1].}
+\item{z}{vector of numbers in (0,1).}
 
 \item{n0}{minimum number of observations for starting. All e-values until
 \code{n0} (included) are equal to 1, and the density is estimated
@@ -30,4 +30,17 @@ estimated parameters at all time points (\code{pars}).
 Tests the null hypothesis that \code{z} is uniformly distributed against
 the alternative that it follows a beta distribution with parameters not
 equal to 1.
+}
+\examples{
+n <- 100
+z <- simulate_pit(n = n, type = "pit", bias = 0, dispersion = 0.25)$z
+e <- beta_e(z = z, n0 = 5)
+str(e)
+
+# Merge by product
+prod(e$e)
+max(cumprod(e$e))
+
+# Look at parameters
+tail(e$par)
 }

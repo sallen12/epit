@@ -93,8 +93,8 @@ NumericVector beta_mle_sequential(
 //' @param z numbers in (0,1), should not be equal to 0 or 1.
 //' @param tol tolerance for stopping (small positive number).
 //' @param max_it maximum number of iterations in Newton method.
-//' @param n0 starting sample sizes. The first \code{n0} observations are
-//'    used only for estimation and the e-values are not computed.
+//' @param n0 starting sample size. The first \code{n0} observations are used
+//'     only for estimation and the e-values are not computed.
 //'
 //' @details
 //' This function is intended for internal use only.

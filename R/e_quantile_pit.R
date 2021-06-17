@@ -9,8 +9,9 @@
 #' @param strategy strategy for evaluating calibration. Available are
 #'     \code{"grenander"} for the Grenander estimator, and \code{"bernstein"}
 #'     for e-values based on Bernstein polynomials.
-#' @param options options for the given strategy (see \code{\link{beta_e}} and
-#'     \code{\link{kernel_e}} for the available parameters).
+#' @param options options for the given strategy (see \code{\link{grenander_e}}
+#'     and \code{\link{bernstein_e}} for the available parameters).
+#' @param check check for correct format of input parameters.
 #'
 #' @details
 #' For continuously distributed observations (when \code{zu,zl} may only
@@ -20,7 +21,7 @@
 #' @return
 #' If \code{h} equals 1: Returns a list containing the vector of e-values
 #' (\code{e}), separate e-values for the upper and lower quantile PIT
-#' (\code{zu}, \code{zl}), and the forecast lag \code{h}.
+#' (\code{eu}, \code{el}), and the forecast lag \code{h}.
 #'
 #' If \code{h} is greater than 1: the list contains for each \code{j=1,2,...,h}
 #' a list with the e-values for all observations with indices
@@ -33,18 +34,39 @@
 #' stochastic dominance.
 #'
 #' @export
+#'
+#' @examples
+#' n <- 360
+#' sim <- simulate_pit(n, "quantile_pit", K = 19, bias = 0.2, dispersion = 0)
+#'
+#' # If z is a lag 1 forecast:
+#' e <- e_quantile_pit(sim$zu, sim$zl, h = 1, strategy = "grenander")
+#' evalue_merge(e)
+#' prod(e$e)
+#' max(cumprod(e$e))
+#'
+#' # Lag 2:
+#' e <- e_quantile_pit(sim$zu, sim$zl, h = 2, strategy = "grenander")
+#' str(e)
+#' evalue_merge(e)
 e_quantile_pit <- function(
     zu,
     zl,
     h,
     strategy = "grenander",
-    options = list()
+    options = list(),
+    check = FALSE
   ) {
+  if (check) {
+    check_z(zu)
+    check_z(zl)
+    check_h(h)
+    check_strategy(strategy, "quantile_pit")
+  }
   e_func <- get(paste0(strategy, "_e"))
   n <- length(zu)
   zu <- 1 - zu
   if (h == 1) {
-    zu <- 1 - zu
     evalues_u <- do.call(e_func, c(list(z = zu), options))
     eu <- evalues_u$e
     evalues_l <- do.call(e_func, c(list(z = zl), options))
@@ -82,13 +104,26 @@ e_quantile_pit <- function(
 #'
 #' @details
 #' For the reverse hypothesis (smaller than uniform distribution), replace
-#' \code{z} by \code{1-z}. Apply \code{\link{correct_e}} to prevent e-values
+#' \code{z} by \code{1-z}. Apply \code{\link{evalue_correct}} to prevent e-values
 #' of exactly zero.
 #'
 #' @return
 #' A list containing the e-values (\code{e}).
 #'
 #' @export
+#'
+#' @examples
+#' # Test hypothesis "greater than uniform distribution in stochastic dominance"
+#'
+#' ## Hypothesis is violated
+#' z <- rbeta(300, 0.75, 1)
+#' e <- grenander_e(z = z)
+#' max(cumprod(e$e))
+#'
+#' ## Hypothesis is correct
+#' z <- rbeta(300, 1, 0.75)
+#' e <- grenander_e(z = z)
+#' max(cumprod(e$e))
 grenander_e <- function(z, n0 = 10, ...) {
   df <- stats::aggregate(
     data.frame(ind = seq_along(z)),
@@ -103,6 +138,7 @@ grenander_e <- function(z, n0 = 10, ...) {
   list(e = e)
 }
 
+
 #' Test stochastic dominance with Bernstein polynomials
 #'
 #' Tests the null hypothesis that \code{z} are generated from a distribution
@@ -116,23 +152,33 @@ grenander_e <- function(z, n0 = 10, ...) {
 #'     \code{NULL}, an optimal \code{m} is estimated with the AIC, BIC or CN
 #'     criterion specified.
 #' @param crit the type of criterion to use for selecting the number of weights.
-#'     Defaults to \code{"CN"}.
+#'     Defaults to \code{"CN"}, other options are \code{"AIC"} and \code{"BIC"}.
 #' @param settings options for \code{\link[osqp]{osqp}}.
 #' @param ... currently not used, only for calling the function with
 #'     \code{do.call}.
 #'
 #' @details
 #' For the reverse hypothesis (smaller than uniform distribution), replace
-#' \code{z} by \code{1-z}. Apply \code{\link{correct_e}} to prevent e-values
+#' \code{z} by \code{1-z}. Apply \code{\link{evalue_correct}} to prevent e-values
 #' of exactly zero.
 #'
 #' @return
 #' A list containing the e-values (\code{e}).
 #'
-#' @seealso
-#' \code{\link{quantile_pit}}
-#'
 #' @export
+#'
+#' @examples
+#' # Test hypothesis "greater than uniform distribution in stochastic dominance"
+#'
+#' ## Hypothesis is violated
+#' z <- rbeta(300, 0.75, 1)
+#' e <- bernstein_e(z = z)
+#' max(cumprod(e$e))
+#'
+#' ## Hypothesis is correct
+#' z <- rbeta(300, 1, 0.75)
+#' e <- bernstein_e(z = z)
+#' max(cumprod(e$e))
 bernstein_e <- function(
   z,
   n0 = 10,
