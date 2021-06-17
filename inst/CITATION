@@ -1,0 +1,11 @@
+citHeader("To cite epit in publications use:")
+
+bibentry(
+  bibtype    = "Unpublished",
+  title    = "Title Title Title",
+  author   = c(person("Sebastian", "Arnold"),
+               person("Alexander", "Henzi"),
+               person("Johanna F", "Ziegel")),
+  year     = "2021",
+  note     = "Preprint, arXiv:????.?????"
+)
