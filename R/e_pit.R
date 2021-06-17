@@ -119,7 +119,6 @@ beta_e <- function(
 #'
 #' @importFrom KernSmooth dpik
 #' @importFrom bde jonesCorrectionMuller94BoundaryKernel
-#' @importFrom bde densityCache
 #' @importFrom bde distribution
 #'
 #' @export
@@ -138,7 +137,7 @@ kernel_e <- function(
   e[seq_len(n0)] <- 1
   pos <- findInterval(z, seq(0, 1, 0.01))
   for (i in (n0 + 1):n) {
-    bws[i] <- KernSmooth:::dpik(
+    bws[i] <- KernSmooth::dpik(
       x = z[seq_len(i - 1)],
       scalest = scalest,
       level = level,

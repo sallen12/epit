@@ -21,7 +21,8 @@ starting from the \code{n0+1}th observation.}
 
 \item{gridsize}{see \code{\link[KernSmooth]{dpik}}.}
 
-\item{...}{not used, only for calling the function with \code{do.call}.}
+\item{...}{currently not used, only for calling the function with
+\code{do.call}.#'}
 }
 \value{
 A list containing the vector of e-values (\code{e}) and a vector of the
