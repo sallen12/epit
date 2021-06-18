@@ -2,7 +2,9 @@ Package: epit
 Type: Package
 Title: Tests For Probability Integral Transform And Related
 Version: 0.1.0
-Author: Alexander Henzi, Sebastian Arnold
+Authors@R:  c(person("Alexander", "Henzi", role = c("aut", "cre"),
+                     email = "henzi.alexander@gmail.com"),
+              person("Sebastian", "Arnold", role = "aut"))
 Maintainer: Alexander Henzi <henzi.alexander@gmail.com>
 Description: Significance tests for checking probabilistic calibration of 
     forecasts, including uniformity tests for the probability integral 
@@ -18,3 +20,8 @@ Imports:
     bde,
     KernSmooth,
     osqp
+Depends: R (>= 3.6)
+Suggests: 
+    knitr,
+    rmarkdown
+URL: https://github.com/AlexanderHenzi/epit
