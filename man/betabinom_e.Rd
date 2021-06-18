@@ -4,7 +4,7 @@
 \alias{betabinom_e}
 \title{Test discrete uniform distribution against betabinomial}
 \usage{
-betabinom_e(r, m, n0 = 30, tol = 1e-07, max_it = 20, ...)
+betabinom_e(r, m, n0 = 10, tol = 1e-07, max_it = 20, ...)
 }
 \arguments{
 \item{r}{observations.}

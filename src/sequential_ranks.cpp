@@ -28,6 +28,7 @@ List sequential_ranks(IntegerVector r, int m, int n0) {
   NumericVector e (n);
   NumericVector w (m + 1);
   double denom = 0;
+  double m1 = m + 1.0;
 
   for (int i = 0; i < n0; i++) {
     e[i] = 1.0;
@@ -43,7 +44,7 @@ List sequential_ranks(IntegerVector r, int m, int n0) {
   }
 
   for (int i = n0; i < n; i++) {
-    e[i] = m * w[r[i]] / denom;
+    e[i] = m1 * w[r1[i]] / denom;
     w[r1[i]] += 1.0;
     denom += 1.0;
   }

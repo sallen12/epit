@@ -101,7 +101,7 @@ e_rank_histogram <- function(
 #' r <- simulate_pit(1000, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
 #' e <- empirical_e(r = r$r, m = 20)
 #' max(cumprod(e$e))
-empirical_e <- function(r, m, n0 = 20, ...) {
+empirical_e <- function(r, m, n0 = 10, ...) {
   sequential_ranks(r = r, m = m, n0 = n0)
 }
 
@@ -136,6 +136,6 @@ empirical_e <- function(r, m, n0 = 20, ...) {
 #' r <- simulate_pit(360, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
 #' e <- betabinom_e(r = r$r, m = 20)
 #' max(cumprod(e$e))
-betabinom_e <- function(r, m, n0 = 30, tol = 1e-7, max_it = 20, ...) {
+betabinom_e <- function(r, m, n0 = 20, tol = 1e-7, max_it = 20, ...) {
   betabinom_e_cpp(r = r, N = m, tol = tol, max_it = max_it, n0 = n0)
 }

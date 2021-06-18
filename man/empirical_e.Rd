@@ -4,7 +4,7 @@
 \alias{empirical_e}
 \title{Test discrete uniform distribution against empirical distribution}
 \usage{
-empirical_e(r, m, n0 = 20, ...)
+empirical_e(r, m, n0 = 10, ...)
 }
 \arguments{
 \item{r}{observations.}
