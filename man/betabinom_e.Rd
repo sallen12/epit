@@ -4,13 +4,12 @@
 \alias{betabinom_e}
 \title{Test discrete uniform distribution against betabinomial}
 \usage{
-betabinom_e(r, m, n0 = 20, tol = 1e-07, max_it = 20, ...)
+betabinom_e(r, m, n0 = 30, tol = 1e-07, max_it = 20, ...)
 }
 \arguments{
 \item{r}{observations.}
 
-\item{m}{size of discrete uniform distribution PLUS ONE (positive integer,
-greater or equal to \code{max(r)+1}).}
+\item{m}{size of discrete uniform distribution.}
 
 \item{n0}{minimum number of observations for starting. All e-values until
 \code{n0} (included) are equal to 1.}

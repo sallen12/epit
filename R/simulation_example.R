@@ -15,8 +15,8 @@
 #' @param seed seed for random number generation (can be omitted).
 #'
 #' @details
-#' For the quantile PIT, the \code{K} equispaced quantiles are extracted from
-#' the forecast distribution (for example, the 0.1,0.2,...0.9 quantiles for
+#' For the quantile PIT, \code{K} equispaced quantiles are extracted from the
+#' forecast distribution (for example, the 0.1,0.2,...0.9 quantiles for
 #' \code{K=9}). For the rank histograms, \code{K} ensemble forecasts are
 #' generated randomly from the forecast distribution.
 #'
@@ -46,8 +46,11 @@ simulate_pit <- function(n, type, bias, dispersion, K = NULL, seed = NULL) {
     )
     quantile_pit(y, quantiles)
   } else if (identical(type, "rank_histogram")) {
-    y <- rnorm(n)
-    ens <- matrix(nrow = n, ncol = K, stats::rnorm(n * K))
+    ens <- matrix(
+      nrow = n,
+      ncol = K,
+      stats::rnorm(n * K, mean = bias, sd = sqrt(1 + dispersion))
+    )
     list(r = ensemble_rank(y, ens))
   } else {
     stop("'type' must be one of 'pit', 'quantile_pit', or 'rank_histogram'")

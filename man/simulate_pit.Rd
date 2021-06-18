@@ -33,8 +33,8 @@ and the probabilistic forecast is normal with mean \code{0+bias} and
 variance \code{1+(dispersion error)}.
 }
 \details{
-For the quantile PIT, the \code{K} equispaced quantiles are extracted from
-the forecast distribution (for example, the 0.1,0.2,...0.9 quantiles for
+For the quantile PIT, \code{K} equispaced quantiles are extracted from the
+forecast distribution (for example, the 0.1,0.2,...0.9 quantiles for
 \code{K=9}). For the rank histograms, \code{K} ensemble forecasts are
 generated randomly from the forecast distribution.
 }

@@ -22,14 +22,16 @@ using namespace Rcpp;
 //' @keywords internal
 //[[Rcpp::export]]
 List sequential_ranks(IntegerVector r, int m, int n0) {
-  int n = r.length();
+  int n = r.size();
+  NumericVector r1(n);
+  for (int i = 0; i < n; i++) r1[i] = r[i] - 1;
   NumericVector e (n);
   NumericVector w (m + 1);
   double denom = 0;
 
   for (int i = 0; i < n0; i++) {
     e[i] = 1.0;
-    w[r[i]] += 1.0;
+    w[r1[i]] += 1.0;
     denom += 1.0;
   }
 
@@ -42,7 +44,7 @@ List sequential_ranks(IntegerVector r, int m, int n0) {
 
   for (int i = n0; i < n; i++) {
     e[i] = m * w[r[i]] / denom;
-    w[r[i]] += 1.0;
+    w[r1[i]] += 1.0;
     denom += 1.0;
   }
 
