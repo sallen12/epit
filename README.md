@@ -71,12 +71,12 @@ test1 <- e_pit(pit1, h = 1)
 test2 <- e_pit(pit2, h = 1)
 test3 <- e_pit(pit3, h = 1)
 
-evalue_merge(test1)$e
-#> [1] 1
-evalue_merge(test2)$e
-#> [1] 95168.39
-evalue_merge(test3)$e
-#> [1] 4945.221
+evalue_merge(test1)$e_end
+#> [1] 0.00334278
+evalue_merge(test2)$e_end
+#> [1] 65291.64
+evalue_merge(test3)$e_end
+#> [1] 3744.59
 ```
 
 The tests are based on *e-values*. The larger the e-value `e`, the more
@@ -84,17 +84,17 @@ evidence against the null hypothesis (more evidence against
 probabilistic calibration), and `1/e` is a valid p-value.
 Interpretation: If we bet 1 dollar against the hypothesis that `F2` is
 probabilistically calibrated, then after n = 730 days, we would have
-turned this 1 dollar into 95’168 dollars. For `F1`, we would only remain
-with 0.0033 dollars…
+turned this 1 dollar into 65’291 dollars. For `F1`, we would remain with
+only 0.0033 dollars…
 
 ``` r
 # transform into p-values
-1 / evalue_merge(test1)$e
+min(1, 1 / evalue_merge(test1)$e_end)
 #> [1] 1
-1 / evalue_merge(test2)$e
-#> [1] 1.050769e-05
-1 / evalue_merge(test3)$e
-#> [1] 0.0002022154
+min(1, 1 / evalue_merge(test2)$e_end)
+#> [1] 1.53159e-05
+min(1, 1 / evalue_merge(test3)$e_end)
+#> [1] 0.0002670519
 ```
 
 # References

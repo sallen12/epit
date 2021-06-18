@@ -69,7 +69,7 @@ evalue_merge <- function(e_output) {
     e <- cumprod(e_output$e)
   }
   max_ind <- which.max(e)[1]
-  list(e = e[max_ind], max_ind = max_ind, end = e[length(e)])
+  list(e = e[max_ind], max_ind = max_ind, e_end = e[length(e)])
 }
 
 #' Quantile PIT
