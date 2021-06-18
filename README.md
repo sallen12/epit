@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# epit
+# epit package
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -82,10 +82,10 @@ evalue_merge(test3)$e
 The tests are based on *e-values*. The larger the e-value `e`, the more
 evidence against the null hypothesis (more evidence against
 probabilistic calibration), and `1/e` is a valid p-value.
-Interpretation: If we would bet 1 dollar against the hypothesis that
-`F2` is probabilistically calibrated, then after n = 730 days, we would
-have turned this 1 dollar into 95’168 dollars. For `F1`, we would only
-remain with 0.0033 dollars…
+Interpretation: If we bet 1 dollar against the hypothesis that `F2` is
+probabilistically calibrated, then after n = 730 days, we would have
+turned this 1 dollar into 95’168 dollars. For `F1`, we would only remain
+with 0.0033 dollars…
 
 ``` r
 # transform into p-values
