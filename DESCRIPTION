@@ -24,4 +24,3 @@ Depends: R (>= 3.6)
 Suggests: 
     knitr,
     rmarkdown
-URL: https://github.com/AlexanderHenzi/epit
