@@ -68,17 +68,17 @@ e_quantile_pit <- function(
   if (h == 1) {
     zu <- 1 - zu
     not_na_u <- !is.na(zu)
-    evalues_u <- rep(1, n)
-    evalues_u[not_na_u] <- do.call(e_func, c(list(z = zu[not_na_u]), options))
-    eu <- evalues_u$e
+    eu <- rep(1, n)
+    evalues_u <- do.call(e_func, c(list(z = zu[not_na_u]), options))
+    eu[not_na_u] <- evalues_u$e
 
     not_na_l <- !is.na(zl)
-    evalues_l <- rep(1, n)
-    evalues_l[not_na_l] <- do.call(e_func, c(list(z = zl[not_na_l]), options))
-    el <- evalues_l$e
+    el <- rep(1, n)
+    evalues_l <- do.call(e_func, c(list(z = zl[not_na_l]), options))
+    el[not_na_l] <- evalues_l$e
 
     e <- 0.5 * (eu + el)
-    list(e = e, eu = eu, el = el, na = which(na_u | na_l),  h = 1)
+    list(e = e, eu = eu, el = el, na = which(!not_na_u | !not_na_l),  h = 1)
   } else {
     evalues <- vector("list", h)
     f <- seq_along(zu) %% h
@@ -90,7 +90,7 @@ e_quantile_pit <- function(
         zl = zl_split[[j]],
         h = 1,
         strategy = strategy,
-        optiions = options
+        options = options
       )
       tmp[[length(tmp)]] <- NULL
       evalues[[j]] <- tmp

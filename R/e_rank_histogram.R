@@ -62,7 +62,7 @@ e_rank_histogram <- function(
   if (h == 1) {
     e <- rep(1, n)
     not_na <- !is.na(r)
-    evalues <- do.call(e_func, c(list(r = r, m = m), options))
+    evalues <- do.call(e_func, c(list(r = r[not_na], m = m), options))
     e[not_na] <- evalues$e
     evalues$e <- e
     c(evalues, list(na = which(!not_na), h = 1))
