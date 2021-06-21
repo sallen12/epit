@@ -27,7 +27,7 @@ kernel density estimation.}
 If \code{h} equals 1: Returns a list containing the vector of e-values
 (\code{e}), parameters used for the computation of the e-value (depending
 on \code{strategy}), indices where \code{z} equals exactly zero or one
-(\code{zero_one}), and the forecast lag \code{h}.
+(\code{zero_one_na}) or where it is \code{NA}, and the forecast lag \code{h}.
 
 If \code{h} is greater than 1: Instead of a vector of e-values, the list
 contains for each \code{j=1,2,...,h} a list with the e-values for all
