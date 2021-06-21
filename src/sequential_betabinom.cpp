@@ -161,7 +161,9 @@ NumericVector betabinom_mle_sequential(
   if (anew > 100) anew = 100;
   if (bnew > 100) bnew = 100;
 
-  NumericVector out {anew, bnew};
+  NumericVector out (2);
+  out[0] = anew;
+  out[1] = bnew;
   return out;
 }
 

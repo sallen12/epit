@@ -22,7 +22,7 @@
 #' If \code{h} equals 1: Returns a list containing the vector of e-values
 #' (\code{e}), parameters used for the computation of the e-value (depending
 #' on \code{strategy}), indices where \code{z} equals exactly zero or one
-#' (\code{zero_one}), and the forecast lag \code{h}.
+#' (\code{zero_one_na}) or where it is \code{NA}, and the forecast lag \code{h}.
 #'
 #' If \code{h} is greater than 1: Instead of a vector of e-values, the list
 #' contains for each \code{j=1,2,...,h} a list with the e-values for all
@@ -66,12 +66,12 @@ e_pit <- function(z, h, strategy = "beta", options = list(), check = FALSE) {
   e_func <- get(paste0(strategy, "_e"))
   n <- length(z)
   if (h == 1) {
-    not_zero_one <- (z > 0 & z < 1)
+    not_zero_one_na <- (z > 0 & z < 1 & !is.na(z))
     e <- rep(1, n)
-    evalues <- do.call(e_func, c(list(z = z[not_zero_one]), options))
-    e[not_zero_one] <- evalue_correct(evalues$e)
+    evalues <- do.call(e_func, c(list(z = z[not_zero_one_na]), options))
+    e[not_zero_one_na] <- evalue_correct(evalues$e)
     evalues$e <- e
-    c(evalues, list(zero_one = which(!not_zero_one), h = h))
+    c(evalues, list(zero_one_na = which(!not_zero_one_na), h = h))
   } else {
     evalues <- vector("list", h)
     f <- seq_along(z) %% h

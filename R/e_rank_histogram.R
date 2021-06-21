@@ -60,7 +60,12 @@ e_rank_histogram <- function(
   e_func <- get(paste0(strategy, "_e"))
   n <- length(r)
   if (h == 1) {
-    c(do.call(e_func, c(list(r = r, m = m), options)), list(h = 1))
+    e <- rep(1, n)
+    not_na <- !is.na(r)
+    evalues <- do.call(e_func, c(list(r = r, m = m), options))
+    e[not_na] <- evalues$e
+    evalues$e <- e
+    c(evalues, list(na = which(!not_na), h = 1))
   } else {
     evalues <- vector("list", h)
     f <- seq_along(r) %% h

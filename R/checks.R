@@ -20,8 +20,8 @@ check_h <- function(h) {
 #'
 #' @keywords internal
 check_z <- function(z) {
-  if (!(is.vector(z, "numeric") & !anyNA(z) & (min(z) >= 0) & (max(z) <= 1)))
-    stop("(quantile) PIT should be numeric vector in [0,1] without NA")
+  if (!(is.vector(z, "numeric") & (min(z) >= 0) & (max(z) <= 1)))
+    stop("(quantile) PIT should be numeric vector in [0,1]")
 }
 
 #' Check ranks
@@ -38,8 +38,8 @@ check_z <- function(z) {
 check_ranks <- function(r, m) {
   if (!(is.numeric(m) && (length(m) == 1) && (floor(m) == m)))
     stop("'m' should be a single positive integer")
-  if (!(is.vector(r, "numeric") & !anyNA(r) & (min(r) > 0) & !any(r != floor(r))))
-    stop("'r' PIT should be a vector of positive integers without NA")
+  if (!(is.vector(r, "numeric") & (min(r) > 0) & !any(r != floor(r))))
+    stop("'r' PIT should be a vector of positive integers")
   mr <- max(r)
   if (mr > m + 1)
     stop("maximum of 'r' should be less or equal to m+1")
