@@ -31,13 +31,12 @@ evalue_combine_h <- function(es) {
   h <- length(es)
   ns <- lengths(es)
   n <- sum(ns)
-  e <- numeric(n)
-  pos <- (seq_len(n) %% h) + 1L
-  for (j in seq_len(h)) {
-    tmp <- cumprod(es[[j]])
-    e[pos == j] <- c(tmp[1], diff(tmp))
+  e <- rep(exp(cumsum(log(es[[1]]))), each = h)[seq_len(n)]
+  for (j in 2:h) {
+    e <- e +
+      c(rep(0, j - 1), rep(exp(cumsum(log(es[[j]]))), each = h))[seq_len(n)]
   }
-  cumsum(e) / h
+  e / h
 }
 
 #' Merge e-values to perform hypothesis tests

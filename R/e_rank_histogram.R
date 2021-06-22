@@ -68,7 +68,7 @@ e_rank_histogram <- function(
     c(evalues, list(na = which(!not_na), h = 1))
   } else {
     evalues <- vector("list", h)
-    f <- seq_along(r) %% h
+    f <- rep(seq_len(n), ceiling(n / h))[seq_len(n)]
     r_split <- unname(split(x = r, f))
     for (j in seq_len(h)) {
       tmp <- e_rank_histogram(
