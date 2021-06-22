@@ -74,7 +74,7 @@ e_pit <- function(z, h, strategy = "beta", options = list(), check = FALSE) {
     c(evalues, list(zero_one_na = which(!not_zero_one_na), h = h))
   } else {
     evalues <- vector("list", h)
-    f <- rep(seq_len(n), ceiling(n / h))[seq_len(n)]
+    f <- rep(seq_len(h), ceiling(n / h))[seq_len(n)]
     z_split <- unname(split(x = z, f))
     for (j in seq_len(h)) {
       tmp <- e_pit(

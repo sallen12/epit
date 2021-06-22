@@ -81,7 +81,7 @@ e_quantile_pit <- function(
     list(e = e, eu = eu, el = el, na = which(!not_na_u | !not_na_l),  h = 1)
   } else {
     evalues <- vector("list", h)
-    f <- rep(seq_len(n), ceiling(n / h))[seq_len(n)]
+    f <- rep(seq_len(h), ceiling(n / h))[seq_len(n)]
     zu_split <- unname(split(x = zu, f))
     zl_split <- unname(split(x = zl, f))
     for (j in seq_len(h)) {
