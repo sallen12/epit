@@ -75,7 +75,7 @@ e_rank_histogram <- function(
         r = r_split[[j]],
         h = 1,
         m = m + 1,
-        options = options()
+        options = options
       )
       tmp[[length(tmp)]] <- NULL
       evalues[[j]] <- tmp
