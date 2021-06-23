@@ -15,7 +15,7 @@ using namespace Rcpp;
 //'
 //' @keywords internal
 double dbetabinom(double x, double a, double b, double N) {
-  return R::choose(N, x) * R::beta(x + a, N - x + b) / R::beta(a, b);
+  return exp(R::lchoose(N, x) + R::lbeta(x + a, N - x + b) - R::lbeta(a, b));
 }
 
 //' Wrapper for sums of digamma function
