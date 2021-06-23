@@ -31,7 +31,7 @@ evalue_combine_h <- function(es) {
   h <- length(es)
   ns <- lengths(es)
   n <- sum(ns)
-  e <- rep(exp(cumsum(log(es[[1]]))), each = h)[seq_len(n)]
+  e <- rep(exp(cumsum(log(es[[1]]))), each = h, length.out = n)
   for (j in 2:h) {
     e <- e +
       c(rep(0, j - 1), rep(exp(cumsum(log(es[[j]]))), each = h))[seq_len(n)]
