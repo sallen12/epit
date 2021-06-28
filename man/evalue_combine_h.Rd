@@ -13,7 +13,7 @@ evalue_combine_h(es)
 Combined e-value (vector of length \code{sum(lengths(es))}).
 }
 \description{
-Combine e-values for forecasts with lag \code{h > 1}.
+Combine e-values for forecasts with lag \code{h>1}.
 }
 \details{
 It is assumed that the first enrty of \code{es} contains all e-values with

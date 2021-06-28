@@ -16,7 +16,7 @@ evalue_correct <- function(e) {
 
 #' Combine lag h e-values
 #'
-#' Combine e-values for forecasts with lag \code{h > 1}.
+#' Combine e-values for forecasts with lag \code{h>1}.
 #'
 #' @param es list of e-values.
 #'
@@ -36,6 +36,7 @@ evalue_combine_h <- function(es) {
     e <- e +
       c(rep(0, j - 1), rep(exp(cumsum(log(es[[j]]))), each = h))[seq_len(n)]
   }
+  e[seq_len(h)] <- 1
   e / h
 }
 
