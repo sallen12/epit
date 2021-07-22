@@ -192,7 +192,8 @@ kernel_e <- function(
   bws <- numeric(n)
   bws[seq_len(n0)] <- NA
   e[seq_len(n0)] <- 1
-  pos <- findInterval(z, seq(0, 1, 0.01))
+  grdseq <- seq(0, 1, 0.01)
+  pos <- as.integer(round(100 * z)) + 1L
   for (i in (n0 + 1):n) {
     bws[i] <- KernSmooth::dpik(
       x = z[seq_len(i - 1)],
@@ -205,7 +206,8 @@ kernel_e <- function(
     kernel_estim <- bde::jonesCorrectionMuller94BoundaryKernel(
       dataPoints = z[seq_len(i - 1)],
       b = min(0.5, bws[i]),
-      mu = 1
+      mu = 1,
+      dataPointsCache = grdseq
     )
     e[i] <- kernel_estim@densityCache[pos[i]] /
       bde::distribution(kernel_estim, x = 1, FALSE)
