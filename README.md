@@ -38,4 +38,5 @@ Further useful functions:
 
 # References
 
-Preprint:
+Sebastian Arnold, Alexander Henzi, and Johanna F. Ziegel. Sequentially
+valid tests for forecast calibration. *Soon on arXiv.*
