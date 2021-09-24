@@ -28,6 +28,7 @@ using namespace Rcpp;
 //' Code is ported to Rcpp from the Rfast package (beta.mle) by Alexander Henzi.
 //'
 //' @keywords internal
+//' @name beta_mle_sequential
 NumericVector beta_mle_sequential(
     double tol,
     int max_it,
@@ -37,7 +38,6 @@ NumericVector beta_mle_sequential(
     double sy2,
     double n
 ) {
-  //
 
   sly1 = sly1 / (1.0 * n);
   sly2 = sly2 / (1.0 * n);
@@ -103,6 +103,7 @@ NumericVector beta_mle_sequential(
 //' List containing the e-values (density evaluated at the given value of
 //' \code{z[i]}) and a matrix of the parameters for each index \code{i}.
 //'
+//' @name beta_e_cpp
 //' @keywords internal
 //[[Rcpp::export]]
 List beta_e_cpp(NumericVector z, double tol, int max_it, int n0) {

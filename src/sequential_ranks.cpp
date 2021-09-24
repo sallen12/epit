@@ -19,6 +19,7 @@ using namespace Rcpp;
 //' @return
 //' List containing the of e-values.
 //'
+//' @name sequential_ranks
 //' @keywords internal
 //[[Rcpp::export]]
 List sequential_ranks(IntegerVector r, int m, int n0) {

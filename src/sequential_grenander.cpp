@@ -15,6 +15,7 @@ using namespace Rcpp;
 //' Vector of the density evaluated (same length as \code{pos_Z}, the first
 //' entry is set to 1).
 //'
+//' @name sequential_grenander
 //' @keywords internal
 //'
 // [[Rcpp::export]]

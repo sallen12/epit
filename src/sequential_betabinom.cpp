@@ -13,6 +13,7 @@ using namespace Rcpp;
 //' @return
 //' Probability of \code{x} under the distribution specified by the parameters.
 //'
+//' @name dbetabinom
 //' @keywords internal
 double dbetabinom(double x, double a, double b, double N) {
   return exp(R::lchoose(N, x) + R::lbeta(x + a, N - x + b) - R::lbeta(a, b));
@@ -29,6 +30,7 @@ double dbetabinom(double x, double a, double b, double N) {
 //' @return
 //' Single number (double), the result.
 //'
+//' @name sdigammav
 //' @keywords internal
 double sdigammav(NumericVector u, NumericVector v) {
   // wrapper for sum(digamma(u) * v)
@@ -49,6 +51,7 @@ double sdigammav(NumericVector u, NumericVector v) {
 //' @return
 //' Single number (double), the result.
 //'
+//' @name strigammav
 //' @keywords internal
 double strigammav(NumericVector u, NumericVector v) {
   // wrapper for sum(trigamma(u) * v)
@@ -88,6 +91,7 @@ double strigammav(NumericVector u, NumericVector v) {
 //' @author
 //' Code is ported to Rcpp from the Rfast package (beta.mle) by Alexander Henzi.
 //'
+//' @name betabinom_mle_sequential
 //' @keywords internal
 NumericVector betabinom_mle_sequential(
     int N,
@@ -185,6 +189,7 @@ NumericVector betabinom_mle_sequential(
 //' List containing the e-values (density evaluated at the given value of
 //' \code{r[i]}) and a matrix of the parameters for each index \code{i}.
 //'
+//' @name betabinom_e_cpp
 //' @keywords internal
 //[[Rcpp::export]]
 List betabinom_e_cpp(NumericVector r, int N, double tol, int max_it, int n0) {

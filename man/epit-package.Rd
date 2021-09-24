@@ -3,7 +3,7 @@
 \docType{package}
 \name{epit-package}
 \alias{epit-package}
-\title{Tests For Probability Integral Transform And Related}
+\title{E-Values for testing probabilistic calibration}
 \description{
 This package contains functions for testing whether the probability
 integral transform (PIT), the quantile PIT, or rank histograms significantly

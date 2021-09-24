@@ -1,4 +1,4 @@
-#' Tests For Probability Integral Transform And Related
+#' E-Values for testing probabilistic calibration
 #'
 #' This package contains functions for testing whether the probability
 #' integral transform (PIT), the quantile PIT, or rank histograms significantly

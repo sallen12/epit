@@ -16,7 +16,7 @@ Combined e-value (vector of length \code{sum(lengths(es))}).
 Combine e-values for forecasts with lag \code{h>1}.
 }
 \details{
-It is assumed that the first enrty of \code{es} contains all e-values with
+It is assumed that the first entry of \code{es} contains all e-values with
 indices \code{1,1+h,1+2h,...}, and more general the \code{j}th entry contains
 the e-values with indices \code{j,j+h,j+2h,...}.
 }

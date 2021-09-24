@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // beta_e_cpp
 List beta_e_cpp(NumericVector z, double tol, int max_it, int n0);
 RcppExport SEXP _epit_beta_e_cpp(SEXP zSEXP, SEXP tolSEXP, SEXP max_itSEXP, SEXP n0SEXP) {

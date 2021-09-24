@@ -28,6 +28,7 @@
 #' Code is ported to Rcpp from the Rfast package (beta.mle) by Alexander Henzi.
 #'
 #' @keywords internal
+#' @name beta_mle_sequential
 NULL
 
 #' Compute e-values based on beta distrbution
@@ -48,6 +49,7 @@ NULL
 #' List containing the e-values (density evaluated at the given value of
 #' \code{z[i]}) and a matrix of the parameters for each index \code{i}.
 #'
+#' @name beta_e_cpp
 #' @keywords internal
 beta_e_cpp <- function(z, tol, max_it, n0) {
     .Call(`_epit_beta_e_cpp`, z, tol, max_it, n0)
@@ -65,6 +67,7 @@ beta_e_cpp <- function(z, tol, max_it, n0) {
 #' @return
 #' Probability of \code{x} under the distribution specified by the parameters.
 #'
+#' @name dbetabinom
 #' @keywords internal
 NULL
 
@@ -79,6 +82,7 @@ NULL
 #' @return
 #' Single number (double), the result.
 #'
+#' @name sdigammav
 #' @keywords internal
 NULL
 
@@ -93,6 +97,7 @@ NULL
 #' @return
 #' Single number (double), the result.
 #'
+#' @name strigammav
 #' @keywords internal
 NULL
 
@@ -126,6 +131,7 @@ NULL
 #' @author
 #' Code is ported to Rcpp from the Rfast package (beta.mle) by Alexander Henzi.
 #'
+#' @name betabinom_mle_sequential
 #' @keywords internal
 NULL
 
@@ -147,6 +153,7 @@ NULL
 #' List containing the e-values (density evaluated at the given value of
 #' \code{r[i]}) and a matrix of the parameters for each index \code{i}.
 #'
+#' @name betabinom_e_cpp
 #' @keywords internal
 betabinom_e_cpp <- function(r, N, tol, max_it, n0) {
     .Call(`_epit_betabinom_e_cpp`, r, N, tol, max_it, n0)
@@ -166,6 +173,7 @@ betabinom_e_cpp <- function(r, N, tol, max_it, n0) {
 #' Vector of the density evaluated (same length as \code{pos_Z}, the first
 #' entry is set to 1).
 #'
+#' @name sequential_grenander
 #' @keywords internal
 #'
 sequential_grenander <- function(z, pos_Z) {
@@ -190,6 +198,7 @@ sequential_grenander <- function(z, pos_Z) {
 #' @return
 #' List containing the of e-values.
 #'
+#' @name sequential_ranks
 #' @keywords internal
 sequential_ranks <- function(r, m, n0) {
     .Call(`_epit_sequential_ranks`, r, m, n0)
