@@ -43,5 +43,7 @@ Further useful functions:
 }
 
 \references{
-Preprint here
+S. Arnold, A. Henzi, and J. F. Ziegel. Sequentially valid tests for forecast
+calibration. Preprint, 2021. Available at
+\url{https://arxiv.org/abs/2109.11761}.
 }
