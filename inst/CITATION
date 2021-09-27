@@ -2,10 +2,10 @@ citHeader("To cite epit in publications use:")
 
 bibentry(
   bibtype    = "Unpublished",
-  title    = "Title Title Title",
+  title    = "Sequentially valid tests for forecast calibration",
   author   = c(person("Sebastian", "Arnold"),
                person("Alexander", "Henzi"),
                person("Johanna F", "Ziegel")),
   year     = "2021",
-  note     = "Preprint, arXiv:????.?????"
+  note     = "Preprint, arXiv:2109.11761"
 )

@@ -38,5 +38,9 @@ Further useful functions:
 
 # References
 
-Sebastian Arnold, Alexander Henzi, and Johanna F. Ziegel. Sequentially
-valid tests for forecast calibration. *Soon on arXiv.*
+S. Arnold, A. Henzi, and J. F. Ziegel. Sequentially valid tests for
+forecast calibration. Preprint, 2021. Available at
+<https://arxiv.org/abs/2109.11761>.
+
+The folder `replication_material` contains replication material for the
+simulations and the case study in the article.
