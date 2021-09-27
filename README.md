@@ -12,7 +12,17 @@ histograms significantly deviate from a uniform distribution. Also
 allows sequential tests for stochastic dominance compared to the uniform
 distribution.
 
-# Main functions
+## Installation
+
+Install the the development version from [GitHub](https://github.com/)
+with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("AlexanderHenzi/epit")
+```
+
+## Main functions
 
 -   `e_pit` for testing uniformity of pit, with methods `beta_e` and
     `kernel_e.`
@@ -36,7 +46,7 @@ Further useful functions:
 -   `evalue_combine_h` for combining e-values at different forecast
     lags.
 
-# References
+## References
 
 S. Arnold, A. Henzi, and J. F. Ziegel. Sequentially valid tests for
 forecast calibration. Preprint, 2021. Available at
