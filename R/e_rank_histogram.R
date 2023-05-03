@@ -74,7 +74,7 @@ e_rank_histogram <- function(
       tmp <- e_rank_histogram(
         r = r_split[[j]],
         h = 1,
-        m = m + 1,
+        m = m,
         options = options,
         strategy = strategy
       )
