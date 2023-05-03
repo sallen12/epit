@@ -16,6 +16,11 @@
 #' It is recommended to use \code{strategy="empirical"} only for large sample
 #' sizes (>1000).
 #'
+#' If r is matrix, then the rows will be treated as different time points, and
+#' the columns as different variables to aggregate over. This accounts for cases
+#' where more than one forecast and observation is available at each point in time,
+#' e.g. from multiple points in space.
+#'
 #' @return
 #' If \code{h} equals 1: Returns a list containing the vector of e-values
 #' (\code{e}) and the forecast lag \code{h}.
@@ -52,36 +57,53 @@ e_rank_histogram <- function(
     options = list(),
     check = FALSE
   ) {
-  if (check) {
-    check_ranks(r, m)
-    check_h(h)
-    check_strategy(strategy, "rank_histogram")
-  }
-  e_func <- get(paste0(strategy, "_e"))
-  n <- length(r)
-  if (h == 1) {
-    e <- rep(1, n)
-    not_na <- !is.na(r)
-    evalues <- do.call(e_func, c(list(r = r[not_na], m = m), options))
-    e[not_na] <- evalues$e
-    evalues$e <- e
-    c(evalues, list(na = which(!not_na), h = 1))
+
+  if (is.matrix(r)) {
+    d <- ncol(r)
+    r_vec <- as.vector(t(r))
+    n <- length(r)
+    options$d <- d
+    e_rank_histogram(
+      r = r_vec,
+      h = h,
+      m = m,
+      strategy = strategy,
+      options = options
+    )
   } else {
-    evalues <- vector("list", h)
-    f <- rep(seq_len(h), ceiling(n / h))[seq_len(n)]
-    r_split <- unname(split(x = r, f))
-    for (j in seq_len(h)) {
-      tmp <- e_rank_histogram(
-        r = r_split[[j]],
-        h = 1,
-        m = m,
-        options = options,
-        strategy = strategy
-      )
-      tmp[[length(tmp)]] <- NULL
-      evalues[[j]] <- tmp
+    if (check) {
+      check_ranks(r, m)
+      check_h(h)
+      check_strategy(strategy, "rank_histogram")
     }
-    list(evalues_h = evalues, h = h)
+    n <- length(r)
+    if (h == 1) {
+      e_func <- get(paste0(strategy, "_e"))
+      e <- rep(1, n)
+      not_na <- !is.na(r)
+      evalues <- do.call(e_func, c(list(r = r[not_na], m = m), options))
+      e[not_na] <- evalues$e
+      evalues$e <- e
+      c(evalues, list(na = which(!not_na), h = 1))
+    } else {
+      evalues <- vector("list", h)
+      if (is.null(options$d)) d <- 1
+      f <- rep(seq_len(h), ceiling(n / (h * d)), each = d)[seq_len(n)]
+      r_split <- unname(split(x = r, f))
+      for (j in seq_len(h)) {
+        tmp <- e_rank_histogram(
+          r = r_split[[j]],
+          h = 1,
+          m = m,
+          options = options,
+          strategy = strategy
+        )
+        tmp[[length(tmp)]] <- NULL
+        if (!identical(d, 1)) tmp$e <- tmp$e[seq(d, length(tmp$e), d)]
+        evalues[[j]] <- tmp
+      }
+      list(evalues_h = evalues, h = h)
+    }
   }
 }
 
