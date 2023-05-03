@@ -75,7 +75,7 @@ e_rank_histogram <- function(
     r_split <- lapply(unname(split(x = data.frame(r), f)), as.matrix)
     evalues <- lapply(seq_along(r_split), function(i) {
       evals <- sapply(1:d, function(k) sapply(1:nrow(r_split[[i]]), function(j)
-          dbetabinom(r_split[[i]][j, k], bb_pars[[i]][j, 1], bb_pars[[i]][j, 2], m)*(m + 1) ))
+          dbetabinom(r_split[[i]][j, k], bb_pars[[i]][j, 1], bb_pars[[i]][j, 2], m + 1)*(m + 1) ))
       evals <- rowMeans(evals)
       not_na <- !is.na(r_split[[i]])
       list(e = evals, pars = bb_pars[[i]], na = which(!not_na))
