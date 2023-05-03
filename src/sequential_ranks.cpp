@@ -9,8 +9,7 @@ using namespace Rcpp;
 //' \code{1,...,m}.
 //'
 //' @param r observations.
-//' @param m size of discrete uniform distribution PLUS ONE (positive integer,
-//'     greater or equal to \code{max(r)+1}).
+//' @param m size of discrete uniform distribution.
 //' @param n0 minimum number of observations for starting. All e-values until
 //'     \code{n0} (included) are equal to 1.
 //' @param ... currently not used, only for calling the function with
