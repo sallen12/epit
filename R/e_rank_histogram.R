@@ -60,16 +60,27 @@ e_rank_histogram <- function(
 
   if (is.matrix(r)) {
     d <- ncol(r)
+    n <- nrow(r)
     r_vec <- as.vector(t(r))
-    n <- length(r)
     options$d <- d
-    e_rank_histogram(
+    e <- e_rank_histogram(
       r = r_vec,
       h = h,
       m = m,
       strategy = strategy,
       options = options
     )
+    bb_pars <- lapply(e$evalues_h, function(x) x$pars[seq(d, nrow(x$pars), d) , ])
+    f <- rep(seq_len(h), ceiling(n / h))[seq_len(n)]
+    r_split <- lapply(unname(split(x = data.frame(r), f)), as.matrix)
+    evalues <- lapply(seq_along(r_split), function(i) {
+      evals <- sapply(1:d, function(k) sapply(1:nrow(r_split[[i]]), function(j)
+          dbetabinom(r_split[[i]][j, k], bb_pars[[i]][j, 1], bb_pars[[i]][j, 2], m)*(m + 1) ))
+      evals <- rowMeans(evals)
+      not_na <- !is.na(r_split[[i]])
+      list(e = evals, pars = bb_pars[[i]], na = which(!not_na))
+    })
+    list(evalues_h = evalues, h = h)
   } else {
     if (check) {
       check_ranks(r, m)
@@ -87,7 +98,8 @@ e_rank_histogram <- function(
       c(evalues, list(na = which(!not_na), h = 1))
     } else {
       evalues <- vector("list", h)
-      if (is.null(options$d)) d <- 1
+      d <- options$d
+      if (is.null(d)) d <- 1
       f <- rep(seq_len(h), ceiling(n / (h * d)), each = d)[seq_len(n)]
       r_split <- unname(split(x = r, f))
       for (j in seq_len(h)) {
@@ -99,7 +111,6 @@ e_rank_histogram <- function(
           strategy = strategy
         )
         tmp[[length(tmp)]] <- NULL
-        if (!identical(d, 1)) tmp$e <- tmp$e[seq(d, length(tmp$e), d)]
         evalues[[j]] <- tmp
       }
       list(evalues_h = evalues, h = h)

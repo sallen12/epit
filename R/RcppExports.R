@@ -55,22 +55,6 @@ beta_e_cpp <- function(z, tol, max_it, n0) {
     .Call(`_epit_beta_e_cpp`, z, tol, max_it, n0)
 }
 
-#' Probability function of betabinomial distribution
-#'
-#' Computes the probability function of the betabinomial distribution.
-#'
-#' @param x quantile (single number, not vectorized).
-#' @param a first parameter of beta distribution (single number).
-#' @param b first parameter of beta distribution (single number).
-#' @param N number of trials (single number).
-#'
-#' @return
-#' Probability of \code{x} under the distribution specified by the parameters.
-#'
-#' @name dbetabinom
-#' @keywords internal
-NULL
-
 #' Wrapper for sums of digamma function
 #'
 #' Apply digamma function to vector and compute scalar product with another
@@ -134,6 +118,24 @@ NULL
 #' @name betabinom_mle_sequential
 #' @keywords internal
 NULL
+
+#' Probability function of betabinomial distribution
+#'
+#' Computes the probability function of the betabinomial distribution.
+#'
+#' @param x quantile (single number, not vectorized).
+#' @param a first parameter of beta distribution (single number).
+#' @param b first parameter of beta distribution (single number).
+#' @param N number of trials (single number).
+#'
+#' @return
+#' Probability of \code{x} under the distribution specified by the parameters.
+#'
+#' @name dbetabinom
+#' @keywords internal
+dbetabinom <- function(x, a, b, N) {
+    .Call(`_epit_dbetabinom`, x, a, b, N)
+}
 
 #' Compute e-values based on betabinomial distrbution
 #'

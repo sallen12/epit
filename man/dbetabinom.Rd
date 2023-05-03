@@ -3,6 +3,9 @@
 \name{dbetabinom}
 \alias{dbetabinom}
 \title{Probability function of betabinomial distribution}
+\usage{
+dbetabinom(x, a, b, N)
+}
 \arguments{
 \item{x}{quantile (single number, not vectorized).}
 

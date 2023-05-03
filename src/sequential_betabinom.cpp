@@ -15,6 +15,7 @@ using namespace Rcpp;
 //'
 //' @name dbetabinom
 //' @keywords internal
+//[[Rcpp::export]]
 double dbetabinom(double x, double a, double b, double N) {
   return exp(R::lchoose(N, x) + R::lbeta(x + a, N - x + b) - R::lbeta(a, b));
 }

@@ -24,6 +24,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// dbetabinom
+double dbetabinom(double x, double a, double b, double N);
+RcppExport SEXP _epit_dbetabinom(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP NSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    rcpp_result_gen = Rcpp::wrap(dbetabinom(x, a, b, N));
+    return rcpp_result_gen;
+END_RCPP
+}
 // betabinom_e_cpp
 List betabinom_e_cpp(NumericVector r, int N, double tol, int max_it, int n0);
 RcppExport SEXP _epit_betabinom_e_cpp(SEXP rSEXP, SEXP NSEXP, SEXP tolSEXP, SEXP max_itSEXP, SEXP n0SEXP) {
@@ -67,6 +81,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_epit_beta_e_cpp", (DL_FUNC) &_epit_beta_e_cpp, 4},
+    {"_epit_dbetabinom", (DL_FUNC) &_epit_dbetabinom, 4},
     {"_epit_betabinom_e_cpp", (DL_FUNC) &_epit_betabinom_e_cpp, 5},
     {"_epit_sequential_grenander", (DL_FUNC) &_epit_sequential_grenander, 2},
     {"_epit_sequential_ranks", (DL_FUNC) &_epit_sequential_ranks, 3},
