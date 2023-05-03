@@ -44,7 +44,7 @@ Tests null hypothesis that rank histogram follows a uniform distribution.
 It is recommended to use \code{strategy="empirical"} only for large sample
 sizes (>1000).
 
-If r is matrix, then the rows will be treated as different time points, and
+If r is a matrix, then the rows will be treated as different time points, and
 the columns as different variables to aggregate over. This accounts for cases
 where more than one forecast and observation is available at each point in time,
 e.g. from multiple points in space.
