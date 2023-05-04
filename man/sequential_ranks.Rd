@@ -2,10 +2,13 @@
 % Please edit documentation in R/RcppExports.R
 \name{sequential_ranks}
 \alias{sequential_ranks}
+\alias{sequential_ranks_agg}
 \title{Sequential computation of e-values for discrete uniform distribution
 (empirical)}
 \usage{
 sequential_ranks(r, m, n0)
+
+sequential_ranks_agg(r, m, n0)
 }
 \arguments{
 \item{r}{observations.}

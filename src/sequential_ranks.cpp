@@ -51,3 +51,47 @@ List sequential_ranks(IntegerVector r, int m, int n0) {
 
   return List::create(_["e"] = e);
 }
+
+//' @rdname sequential_ranks
+//' @keywords internal
+//[[Rcpp::export]]
+List sequential_ranks_agg(IntegerMatrix r, int m, int n0) {
+  int n = r.nrow();
+  int d = r.ncol();
+  NumericMatrix r1(n, d);
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < d; j++) {
+      r1(i, j) = r(i, j) - 1;
+    }
+  }
+
+  NumericMatrix e (n, d);
+  NumericVector w (m + 1);
+  double denom = 0;
+  double m1 = m + 1.0;
+
+  for (int i = 0; i < n0; i++) {
+    for (int j = 0; j < d; j++) {
+      e(i, j) = 1.0;
+      w[r1(i, j)] += 1.0;
+      denom += 1.0;
+    }
+  }
+
+  if (min(w) < 0.5) {
+    for (int j = 0; j <= m; j++) {
+      w[j] += 1.0;
+      denom++;
+    }
+  }
+
+  for (int i = n0; i < n; i++) {
+    for (int j = 0; j < d; j++) {
+      e(i, j) = m1 * w[r1(i, j)] / denom;
+      w[r1(i, j)] += 1.0;
+      denom += 1.0;
+    }
+  }
+
+  return List::create(_["e"] = e);
+}

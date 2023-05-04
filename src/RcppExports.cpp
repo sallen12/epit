@@ -93,6 +93,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sequential_ranks_agg
+List sequential_ranks_agg(IntegerMatrix r, int m, int n0);
+RcppExport SEXP _epit_sequential_ranks_agg(SEXP rSEXP, SEXP mSEXP, SEXP n0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type r(rSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< int >::type n0(n0SEXP);
+    rcpp_result_gen = Rcpp::wrap(sequential_ranks_agg(r, m, n0));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_epit_beta_e_cpp", (DL_FUNC) &_epit_beta_e_cpp, 4},
@@ -101,6 +114,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_epit_betabinom_e_agg_cpp", (DL_FUNC) &_epit_betabinom_e_agg_cpp, 5},
     {"_epit_sequential_grenander", (DL_FUNC) &_epit_sequential_grenander, 2},
     {"_epit_sequential_ranks", (DL_FUNC) &_epit_sequential_ranks, 3},
+    {"_epit_sequential_ranks_agg", (DL_FUNC) &_epit_sequential_ranks_agg, 3},
     {NULL, NULL, 0}
 };
 

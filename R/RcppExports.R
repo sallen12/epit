@@ -211,3 +211,9 @@ sequential_ranks <- function(r, m, n0) {
     .Call(`_epit_sequential_ranks`, r, m, n0)
 }
 
+#' @rdname sequential_ranks
+#' @keywords internal
+sequential_ranks_agg <- function(r, m, n0) {
+    .Call(`_epit_sequential_ranks_agg`, r, m, n0)
+}
+
