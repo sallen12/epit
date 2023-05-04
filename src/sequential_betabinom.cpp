@@ -75,7 +75,7 @@ double strigammav(NumericVector u, NumericVector v) {
 //' @param n2 vector of counts how often \code{N-z[i]} has been observed
 //'     (NumericVector).
 //' @param m1 sums of observations (double).
-//' @param sums of squared observations (double).
+//' @param m2 sums of squared observations (double).
 //' @param tol tolerance for stopping (small positive number).
 //' @param max_it maximum number of iterations in Newton method.
 //'
@@ -236,6 +236,66 @@ List betabinom_e_cpp(NumericVector r, int N, double tol, int max_it, int n0) {
     m2 += pow(r1[i], 2);
     n1[r1[i]] += 1.0;
     n2[N - r1[i]] += 1.0;
+  }
+
+  return List::create(_["e"] = e, _["pars"] = par);
+}
+
+//' @rdname betabinom_e_cpp
+//' @keywords internal
+//[[Rcpp::export]]
+List betabinom_e_agg_cpp(NumericMatrix r, int N, double tol, int max_it, int n0) {
+  int n = r.nrow();
+  int d = r.ncol();
+  NumericMatrix r1(n, d);
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < d; j++) {
+      r1(i, j) = r(i, j) - 1;
+    }
+  }
+
+  double m1 = 0.0;
+  double m2 = 0.0;
+  double a;
+  double b;
+  double N1 = 1.0 + N;
+
+  NumericMatrix e(n, d);
+  NumericMatrix par(n, 2);
+  NumericVector z(N + 1);
+  NumericVector n1(N + 1);
+  NumericVector n2(N + 1);
+
+  for (int j = 0; j < N1; j++) {
+    z[j] = j;
+    n1[j] = 0.0;
+    n2[j] = 0.0;
+  }
+
+  for (int i = 0; i < n0; i++) {
+    for(int j = 0; j < d; j++) {
+      e(i, j) = 1;
+      n1[r1(i, j)] += 1.0;
+      n2[N - r1(i, j)] += 1.0;
+      m1 += r1(i, j);
+      m2 += pow(r1(i, j), 2);
+    }
+    par(i, 0) = 1.0;
+    par(i, 1) = 1.0;
+  }
+
+  for (int i = n0; i < n; i++) {
+    par(i, _) = betabinom_mle_sequential(N, i, z, n1, n2, m1, m2, tol, max_it);
+
+    a = par(i, 0);
+    b = par(i, 1);
+    for(int j = 0; j < d; j++) {
+      e(i, j) = dbetabinom(r1(i, j), a, b, N) * N1;
+      n1[r1(i, j)] += 1.0;
+      n2[N - r1(i, j)] += 1.0;
+      m1 += r1(i, j);
+      m2 += pow(r1(i, j), 2);
+    }
   }
 
   return List::create(_["e"] = e, _["pars"] = par);

@@ -98,7 +98,7 @@ NULL
 #' @param n2 vector of counts how often \code{N-z[i]} has been observed
 #'     (NumericVector).
 #' @param m1 sums of observations (double).
-#' @param sums of squared observations (double).
+#' @param m2 sums of squared observations (double).
 #' @param tol tolerance for stopping (small positive number).
 #' @param max_it maximum number of iterations in Newton method.
 #'
@@ -159,6 +159,12 @@ dbetabinom <- function(x, a, b, N) {
 #' @keywords internal
 betabinom_e_cpp <- function(r, N, tol, max_it, n0) {
     .Call(`_epit_betabinom_e_cpp`, r, N, tol, max_it, n0)
+}
+
+#' @rdname betabinom_e_cpp
+#' @keywords internal
+betabinom_e_agg_cpp <- function(r, N, tol, max_it, n0) {
+    .Call(`_epit_betabinom_e_agg_cpp`, r, N, tol, max_it, n0)
 }
 
 #' Sequential computation and evaluation of the Grenander estimator
