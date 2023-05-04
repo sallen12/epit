@@ -146,7 +146,7 @@ empirical_e <- function(r, m, n0 = 10, ...) {
 empirical_e_agg <- function(r, m, avg = TRUE, n0 = 10, ...) {
   e <- sequential_ranks_agg(r = r, m = m, n0 = n0)
   if (avg) {
-    e$e <- rowSums(e$e)
+    e$e <- rowMeans(e$e)
   }
   return(e)
 }
@@ -209,7 +209,7 @@ betabinom_e <- function(r, m, n0 = 20, tol = 1e-7, max_it = 20, ...) {
 betabinom_e_agg <- function(r, m, avg = TRUE, n0 = 20, tol = 1e-7, max_it = 20, ...) {
   e <- betabinom_e_agg_cpp(r = r, N = m, tol = tol, max_it = max_it, n0 = n0)
   if (avg) {
-    e$e <- rowSums(e$e)
+    e$e <- rowMeans(e$e)
   }
   return(e)
 }
