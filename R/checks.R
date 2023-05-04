@@ -38,13 +38,13 @@ check_z <- function(z) {
 check_ranks <- function(r, m) {
   if (!(is.numeric(m) && (length(m) == 1) && (floor(m) == m)))
     stop("'m' should be a single positive integer")
-  if (!(is.vector(r, "numeric") & (min(r) > 0) & !any(r != floor(r))))
-    stop("'r' PIT should be a vector of positive integers")
+  if (!((is.vector(r) | is.matrix(r)) & is.numeric(r) & (min(r) > 0) & !any(r != floor(r))))
+    stop("'r' PIT should be a vector or matrix of positive integers")
   mr <- max(r)
-  if (mr > m + 1)
-    stop("maximum of 'r' should be less or equal to m+1")
-  if (mr < m + 1)
-    warning("maximum of r is strictly smaller than m+1. Is 'm' correct?")
+  if (mr > m )
+    stop("maximum of 'r' should be less or equal to m")
+  if (mr < m)
+    warning("maximum of r is strictly smaller than m. Is 'm' correct?")
 }
 
 #' Check strategy
