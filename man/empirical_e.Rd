@@ -2,9 +2,12 @@
 % Please edit documentation in R/e_rank_histogram.R
 \name{empirical_e}
 \alias{empirical_e}
+\alias{empirical_e_agg}
 \title{Test discrete uniform distribution against empirical distribution}
 \usage{
 empirical_e(r, m, n0 = 10, ...)
+
+empirical_e_agg(r, m, avg = TRUE, n0 = 10, ...)
 }
 \arguments{
 \item{r}{observations.}
@@ -29,4 +32,5 @@ distribution.
 r <- simulate_pit(1000, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
 e <- empirical_e(r = r$r, m = 20)
 max(cumprod(e$e))
+
 }

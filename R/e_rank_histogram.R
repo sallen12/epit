@@ -135,8 +135,20 @@ e_rank_histogram <- function(
 #' r <- simulate_pit(1000, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
 #' e <- empirical_e(r = r$r, m = 20)
 #' max(cumprod(e$e))
+#'
+#' @name empirical_e
 empirical_e <- function(r, m, n0 = 10, ...) {
   sequential_ranks(r = r, m = m, n0 = n0)
+}
+
+#' @rdname empirical_e
+#' @export
+empirical_e_agg <- function(r, m, avg = TRUE, n0 = 10, ...) {
+  e <- sequential_ranks_agg(r = r, m = m, n0 = n0)
+  if (avg) {
+    e$e <- rowSums(e$e)
+  }
+  return(e)
 }
 
 #' Test discrete uniform distribution against betabinomial
