@@ -73,6 +73,8 @@ e_rank_histogram <- function(
   }
   if (is.matrix(r)) {
     n <- nrow(r)
+    if (identical(ncol(r), 1L))
+        return(e_rank_histogram(as.vector(r), h, m, strategy, options, check))
     e_func <- get(paste0(strategy, "_e_agg"))
   } else {
     n <- length(r)
