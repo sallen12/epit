@@ -2,9 +2,12 @@
 % Please edit documentation in R/RcppExports.R
 \name{betabinom_e_cpp}
 \alias{betabinom_e_cpp}
+\alias{betabinom_e_agg_cpp}
 \title{Compute e-values based on betabinomial distrbution}
 \usage{
 betabinom_e_cpp(r, N, tol, max_it, n0)
+
+betabinom_e_agg_cpp(r, N, tol, max_it, n0)
 }
 \arguments{
 \item{r}{numbers in \code{1,...,m}.}

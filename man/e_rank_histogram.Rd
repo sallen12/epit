@@ -14,11 +14,11 @@ e_rank_histogram(
 )
 }
 \arguments{
-\item{r}{observed ranks (numbers in \code{1,...,m+1}).}
+\item{r}{observed ranks (numbers in \code{1,...,m}).}
 
 \item{h}{forecast lag.}
 
-\item{m}{size of the ensemble (positive integer, the \code{m} above).}
+\item{m}{size of the ensemble PLUS ONE (positive integer, the \code{m} above).}
 
 \item{strategy}{strategy for evaluating calibration. Available are
 \code{"empirical"} for the empirical distribution, and \code{"betabinom"}
@@ -60,6 +60,15 @@ prod(e$e)
 max(cumprod(e$e))
 
 # Lag 2:
+e <- e_rank_histogram(r, h = 2, m = 20, strategy = "betabinom")
+str(e)
+evalue_merge(e)
+
+
+# Multivariate
+d <- 3
+r <- simulate_pit(n*d, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)$r
+r <- matrix(r, ncol = d)
 e <- e_rank_histogram(r, h = 2, m = 20, strategy = "betabinom")
 str(e)
 evalue_merge(e)

@@ -3,6 +3,7 @@
 export(bernstein_e)
 export(beta_e)
 export(betabinom_e)
+export(betabinom_e_agg)
 export(e_pit)
 export(e_quantile_pit)
 export(e_rank_histogram)

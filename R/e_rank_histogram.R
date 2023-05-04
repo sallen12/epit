@@ -2,9 +2,9 @@
 #'
 #' Tests null hypothesis that rank histogram follows a uniform distribution.
 #'
-#' @param r observed ranks (numbers in \code{1,...,m+1}).
+#' @param r observed ranks (numbers in \code{1,...,m}).
 #' @param h forecast lag.
-#' @param m size of the ensemble (positive integer, the \code{m} above).
+#' @param m size of the ensemble PLUS ONE (positive integer, the \code{m} above).
 #' @param strategy strategy for evaluating calibration. Available are
 #'     \code{"empirical"} for the empirical distribution, and \code{"betabinom"}
 #'     for the beta-binomial distribution (estimated with maximum likelihood).
@@ -49,6 +49,15 @@
 #' e <- e_rank_histogram(r, h = 2, m = 20, strategy = "betabinom")
 #' str(e)
 #' evalue_merge(e)
+#'
+#'
+#' # Multivariate
+#' d <- 3
+#' r <- simulate_pit(n*d, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)$r
+#' r <- matrix(r, ncol = d)
+#' e <- e_rank_histogram(r, h = 2, m = 20, strategy = "betabinom")
+#' str(e)
+#' evalue_merge(e)
 e_rank_histogram <- function(
     r,
     h,
@@ -57,64 +66,50 @@ e_rank_histogram <- function(
     options = list(),
     check = FALSE
   ) {
-
+  if (check) {
+    check_ranks(r, m)
+    check_h(h)
+    check_strategy(strategy, "rank_histogram")
+  }
   if (is.matrix(r)) {
-    d <- ncol(r)
     n <- nrow(r)
-    r_vec <- as.vector(t(r))
-    options$d <- d
-    e <- e_rank_histogram(
-      r = r_vec,
-      h = h,
-      m = m,
-      strategy = strategy,
-      options = options
-    )
-    bb_pars <- lapply(e$evalues_h, function(x) x$pars[seq(d, nrow(x$pars), d) , ])
-    f <- rep(seq_len(h), ceiling(n / h))[seq_len(n)]
-    r_split <- lapply(unname(split(x = data.frame(r), f)), as.matrix)
-    evalues <- lapply(seq_along(r_split), function(i) {
-      evals <- sapply(1:d, function(k) sapply(1:nrow(r_split[[i]]), function(j)
-          dbetabinom(r_split[[i]][j, k], bb_pars[[i]][j, 1], bb_pars[[i]][j, 2], m + 1)*(m + 1) ))
-      evals <- rowMeans(evals)
-      not_na <- !is.na(r_split[[i]])
-      list(e = evals, pars = bb_pars[[i]], na = which(!not_na))
-    })
-    list(evalues_h = evalues, h = h)
+    e_func <- get(paste0(strategy, "_e_agg"))
   } else {
-    if (check) {
-      check_ranks(r, m)
-      check_h(h)
-      check_strategy(strategy, "rank_histogram")
-    }
     n <- length(r)
-    if (h == 1) {
-      e_func <- get(paste0(strategy, "_e"))
-      e <- rep(1, n)
+    e_func <- get(paste0(strategy, "_e"))
+  }
+  if (h == 1) {
+    e <- rep(1, n)
+    if (is.matrix(r)) {
+      not_na <- rowSums(is.na(r)) == 0
+      evalues <- do.call(e_func, c(list(r = r[not_na, ], m = m), options))
+    } else {
       not_na <- !is.na(r)
       evalues <- do.call(e_func, c(list(r = r[not_na], m = m), options))
-      e[not_na] <- evalues$e
-      evalues$e <- e
-      c(evalues, list(na = which(!not_na), h = 1))
-    } else {
-      evalues <- vector("list", h)
-      d <- options$d
-      if (is.null(d)) d <- 1
-      f <- rep(seq_len(h), ceiling(n / (h * d)), each = d)[seq_len(n)]
-      r_split <- unname(split(x = r, f))
-      for (j in seq_len(h)) {
-        tmp <- e_rank_histogram(
-          r = r_split[[j]],
-          h = 1,
-          m = m,
-          options = options,
-          strategy = strategy
-        )
-        tmp[[length(tmp)]] <- NULL
-        evalues[[j]] <- tmp
-      }
-      list(evalues_h = evalues, h = h)
     }
+    e[not_na] <- evalues$e
+    evalues$e <- e
+    c(evalues, list(na = which(!not_na), h = 1))
+  } else {
+    evalues <- vector("list", h)
+    f <- rep(seq_len(h), ceiling(n / h))[seq_len(n)]
+    if (is.matrix(r)) {
+      r_split <- lapply(split(x = data.frame(r), f), function(x) unname(as.matrix(x)))
+    } else {
+      r_split <- unname(split(x = r, f))
+    }
+    for (j in seq_len(h)) {
+      tmp <- e_rank_histogram(
+        r = r_split[[j]],
+        h = 1,
+        m = m,
+        options = options,
+        strategy = strategy
+      )
+      tmp[[length(tmp)]] <- NULL
+      evalues[[j]] <- tmp
+    }
+    list(evalues_h = evalues, h = h)
   }
 }
 
@@ -150,7 +145,7 @@ empirical_e <- function(r, m, n0 = 10, ...) {
 #' uniform distribution, against a betabinomial distribution (estimated by
 #' maximum likelihood.)
 #'
-#' @param r observations.
+#' @param r vector or matrix of observations.
 #' @param m size of discrete uniform distribution.
 #' @param n0 minimum number of observations for starting. All e-values until
 #'     \code{n0} (included) are equal to 1.
@@ -160,10 +155,17 @@ empirical_e <- function(r, m, n0 = 10, ...) {
 #' @param max_it maximum number of iterations for likelihood maximization.
 #' @param ... currently not used, only for calling the function with
 #'     \code{do.call}.
+#' @param avg logical specify whether e-values should be averaged (across rows)
+#'     when \code{r} is a matrix.
 #'
 #' @details
 #' If \code{n0} is too small, the estimated parameters may diverge for small
 #' samples.
+#'
+#' If r is a matrix, estimation is performed separately for each row - the data
+#' is aggregated across the columns. In this case, \code{n0} is the number of
+#' rows of observations that are used for starting. This is done using the
+#' \code{betabinom_e_agg()} function.
 #'
 #' @return
 #' A list containing the e-values (\code{e}) and the estimated parameters
@@ -172,9 +174,30 @@ empirical_e <- function(r, m, n0 = 10, ...) {
 #' @export
 #'
 #' @examples
-#' r <- simulate_pit(360, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
+#' n <- 360
+#'
+#' # vector
+#' r <- simulate_pit(n, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)
 #' e <- betabinom_e(r = r$r, m = 20)
 #' max(cumprod(e$e))
+#'
+#' # matrix
+#' d <- 3
+#' r <- simulate_pit(n*d, "rank_histogram", K = 20, bias = 0.2, dispersion = 0)$r
+#' r <- matrix(r, ncol = d)
+#' e <- betabinom_e_agg(r = r, m = 20)
+#'
+#' @name betabinom
 betabinom_e <- function(r, m, n0 = 20, tol = 1e-7, max_it = 20, ...) {
   betabinom_e_cpp(r = r, N = m, tol = tol, max_it = max_it, n0 = n0)
+}
+
+#' @rdname betabinom
+#' @export
+betabinom_e_agg <- function(r, m, avg = TRUE, n0 = 20, tol = 1e-7, max_it = 20, ...) {
+  e <- betabinom_e_agg_cpp(r = r, N = m, tol = tol, max_it = max_it, n0 = n0)
+  if (avg) {
+    e$e <- rowSums(e$e)
+  }
+  return(e)
 }

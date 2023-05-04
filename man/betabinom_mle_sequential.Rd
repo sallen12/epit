@@ -18,7 +18,7 @@
 
 \item{m1}{sums of observations (double).}
 
-\item{sums}{of squared observations (double).}
+\item{m2}{sums of squared observations (double).}
 
 \item{tol}{tolerance for stopping (small positive number).}
 
